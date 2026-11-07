@@ -561,15 +561,10 @@ function paint(): void {
   paintTo();
 }
 
-// --- canvases (drawn only when on screen)
-const visible = new WeakMap<Element, boolean>();
-const io = new IntersectionObserver((es) => {
-  for (const e of es) visible.set(e.target, e.isIntersecting);
-});
-for (const c of [waveCanvas, tableCanvas, energyCanvas]) io.observe(c);
+// --- canvases (drawn only while the page shows: a hidden tab's frame has no size, and a hidden document is skipped)
 const css = (name: string) => getComputedStyle(app).getPropertyValue(name).trim();
 function prep(c: HTMLCanvasElement): CanvasRenderingContext2D | null {
-  if (visible.get(c) === false) return null;
+  if (document.visibilityState === "hidden") return null;
   const r = c.getBoundingClientRect();
   if (!r.width || !r.height) return null;
   const dpr = window.devicePixelRatio || 1;
@@ -675,10 +670,12 @@ toWorker({ type: "hold", on: state.hold });
 toWorker({ type: "speeds", speeds: demandSpeeds() });
 paint();
 if (!host || (source?.demand().receivers ?? 0) > 0) wake();
-else
-  new IntersectionObserver((es, obs) => {
-    if (es.some((e) => e.isIntersecting)) {
-      obs.disconnect();
+else {
+  // In the Studio a hidden tab's frame has no size: wake once the page is on screen.
+  const onScreen = setInterval(() => {
+    if (document.visibilityState === "visible" && app.getBoundingClientRect().width > 0) {
+      clearInterval(onScreen);
       wake();
     }
-  }).observe(app);
+  }, 1000);
+}
