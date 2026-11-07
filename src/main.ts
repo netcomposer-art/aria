@@ -135,7 +135,18 @@ const energyHistory: number[] = [];
 let overview: Extract<FromWorker, { type: "overview" }> | null = null;
 let table: Float32Array | null = null;
 
+/**
+ * ARIA connects only when it is needed (EarthScope's server is shared): when its tab is first on screen, or when an
+ * instrument asks for its signals; standalone at once. Then it stays connected for the visit.
+ */
+let awake = false;
+function wake(): void {
+  if (awake) return;
+  awake = true;
+  startStation();
+}
 function startStation(): void {
+  if (!awake) return;
   if (state.station === "recording") {
     toWorker({ type: "recording", recordingUrl: RECORDING_URL });
     return;
@@ -176,6 +187,7 @@ function demandSpeeds(): TableSpeed[] {
 }
 source?.onDemand(() => {
   toWorker({ type: "speeds", speeds: demandSpeeds() });
+  if ((source?.demand().receivers ?? 0) > 0) wake();
   paintTo();
 });
 function statusMessage(): SituationMessage {
@@ -662,4 +674,11 @@ toWorker({ type: "smoothing", sec: state.smoothing });
 toWorker({ type: "hold", on: state.hold });
 toWorker({ type: "speeds", speeds: demandSpeeds() });
 paint();
-startStation();
+if (!host || (source?.demand().receivers ?? 0) > 0) wake();
+else
+  new IntersectionObserver((es, obs) => {
+    if (es.some((e) => e.isIntersecting)) {
+      obs.disconnect();
+      wake();
+    }
+  }).observe(app);
