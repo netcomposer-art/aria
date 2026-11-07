@@ -1,0 +1,136 @@
+/* ARIA: nc-ui tokens only (ui-guard). Its identity Magma (instrument-aria, #FF2A3D in light and dark; Peter,
+   2026-11-06: "do Magma") shows in its title and, in its own panels, the live status, waveform, table and Energy. */
+:root {
+  --aria-magma: var(--nc-ui-instrument-aria);
+}
+.aria-brand {
+  color: var(--aria-magma);
+}
+.nc-module [data-nc-id$="-mount"] {
+  display: none;
+}
+.aria-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nc-ui-space-20);
+  min-width: 0;
+}
+.aria-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nc-ui-space-6);
+  min-width: 0;
+}
+.aria-field[hidden] {
+  display: none;
+}
+.aria-row-between {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--nc-ui-space-12);
+  min-width: 0;
+}
+.aria-small {
+  font-size: var(--nc-ui-font-size-xs);
+}
+.aria-sub {
+  color: var(--nc-ui-text-sub);
+}
+.aria-mono {
+  font-family: var(--nc-ui-font-readout);
+}
+.aria-custom {
+  font: inherit;
+  font-family: var(--nc-ui-font-readout);
+  color: var(--nc-ui-text);
+  background: transparent;
+  border: 0;
+  border-bottom: var(--nc-ui-hairline) solid var(--nc-ui-divider);
+  padding: var(--nc-ui-space-4) 0;
+  text-transform: uppercase;
+}
+.aria-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--nc-ui-space-4) var(--nc-ui-space-14);
+  font-family: var(--nc-ui-font-readout);
+  font-size: var(--nc-ui-readout-size-small);
+}
+.aria-word {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--nc-ui-space-8);
+  letter-spacing: var(--nc-ui-tracking-3);
+  color: var(--aria-magma);
+}
+.aria-word.aria-offline,
+.aria-word.aria-off {
+  color: var(--nc-ui-text-sub);
+}
+.aria-dot {
+  display: inline-block;
+  width: var(--nc-ui-space-8);
+  height: var(--nc-ui-space-8);
+  border-radius: var(--nc-ui-radius-round);
+  background: var(--aria-magma);
+}
+.aria-quiet .aria-dot {
+  background: transparent;
+  border: var(--nc-ui-border-thick) solid var(--aria-magma);
+}
+.aria-offline .aria-dot,
+.aria-off .aria-dot {
+  background: transparent;
+  border: var(--nc-ui-hairline) dashed var(--nc-ui-text-sub);
+}
+.aria-wave,
+.aria-cycle,
+.aria-history {
+  display: block;
+  width: 100%;
+  background: var(--nc-ui-page-head-bg);
+}
+.aria-wave {
+  height: var(--nc-ui-display-height);
+}
+.aria-cycle {
+  height: var(--nc-ui-space-64);
+}
+.aria-history {
+  height: var(--nc-ui-space-48);
+}
+.aria-energy-val {
+  font-family: var(--nc-ui-font-readout);
+  font-size: var(--nc-ui-font-size-4xl);
+  color: var(--aria-magma);
+}
+.aria-meter {
+  position: relative;
+  height: var(--nc-ui-space-8);
+  background: var(--nc-ui-divider);
+}
+.aria-meter > i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--aria-magma);
+}
+.nc-page-action.aria-held {
+  color: var(--nc-ui-text);
+  border-bottom-color: var(--aria-magma);
+}
+.aria-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--nc-ui-space-24);
+  margin-top: var(--nc-ui-section-gap);
+  padding-top: var(--nc-ui-space-24);
+  border-top: var(--nc-ui-hairline) solid var(--nc-ui-divider);
+  font-family: var(--nc-ui-font-readout);
+  font-size: var(--nc-ui-font-size-xs);
+  color: var(--nc-ui-text-sub);
+}
+.aria-foot > span:last-child {
+  white-space: nowrap;
+}

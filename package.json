@@ -1,0 +1,35 @@
+{
+  "name": "aria",
+  "private": true,
+  "license": "MIT",
+  "version": "0.1.0",
+  "description": "ARIA: the NetComposer Studio's Situation module. A live seismometer becomes the Ground wavetable and Energy for the Studio's instruments.",
+  "type": "module",
+  "packageManager": "pnpm@10.33.4",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "build:site": "node scripts/build-site.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check . && node vendor/nc-ui/scripts/guard-app.mjs src --baseline ui-guard.json",
+    "format": "biome check --write .",
+    "mock-sl": "node scripts/mock-seedlink.mjs"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "22.19.1",
+    "@types/ws": "8.18.1",
+    "typescript": "5.9.3",
+    "vite": "6.3.5",
+    "vitest": "3.2.4",
+    "ws": "8.18.3"
+  }
+}

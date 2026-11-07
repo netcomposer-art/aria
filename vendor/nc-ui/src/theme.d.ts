@@ -1,0 +1,14 @@
+import type { themes } from "../dist/tokens.js";
+export type ThemeChoice = "system" | "light" | "dark";
+export type Theme = "light" | "dark";
+export declare const THEME_ATTR: "data-nc-theme";
+export declare const THEME_EVENT: "nc-ui-theme-change";
+export declare const THEME_CHOICES: readonly ThemeChoice[];
+export declare const STUDIO_THEME_KEY: "netcomposer.studio.theme.v1";
+export declare function normalizeTheme(v: unknown): ThemeChoice;
+export declare function themeChoice(doc?: Document): ThemeChoice;
+export declare function currentTheme(doc?: Document): Theme;
+export declare function applyTheme(choice: ThemeChoice | string | null | undefined, doc?: Document): Theme;
+export declare function followHostTheme(win?: Window): ThemeChoice | null;
+export declare function onThemeChange(fn: (theme: Theme) => void, doc?: Document): () => void;
+export declare function themeTokens(theme?: Theme): (typeof themes)[Theme];

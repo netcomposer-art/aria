@@ -1,0 +1,16 @@
+ARIA
+====
+
+ARIA was created by Peter Semmelhack (https://psem.me/). MIT licensed (see LICENSE).
+
+Vendored NetComposer libraries are in vendor/ (each with its own LICENSE and NOTICE).
+
+src/mseed.ts and src/seedlink.ts are ported from Ground Wave (netcomposer-art/calliope, lab/ground-wave/, MIT).
+The SeedLink-over-WebSocket details follow seisplotjs (MIT, Philip Crotwell).
+
+public/anmo-2010-02-27.mseed: ten minutes of IU.ANMO.00.BHZ (Albuquerque, New Mexico), 27 February 2010,
+Global Seismograph Network (IU), Albuquerque Seismological Laboratory / USGS, doi:10.7914/SN/IU, through the
+EarthScope Consortium's data services.
+
+tests/fixtures/*.mseed are libmseed and ObsPy test files (libmseed: Apache-2.0, EarthScope Consortium;
+ObsPy: LGPL-3.0, test data); obspy-ref.json is ObsPy 1.5.1's decoding of them, made by scripts/obspy-ref.py.

@@ -1,0 +1,109 @@
+{
+  "name": "@netcomposer/nc-ui",
+  "version": "0.2.0",
+  "private": true,
+  "description": "The NetComposer design language: one set of tokens (colours, fonts, sizes, spacing, shading) that every NC app and module reads, so the UI stays in sync and a system-wide change is made in one place.",
+  "license": "MIT",
+  "author": {
+    "name": "Peter Semmelhack",
+    "url": "https://psem.me/"
+  },
+  "homepage": "https://github.com/netcomposer-art/nc-ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netcomposer-art/nc-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/netcomposer-art/nc-ui/issues"
+  },
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "css-custom-properties",
+    "web-audio",
+    "music",
+    "netcomposer",
+    "astrid"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js"
+    },
+    "./tokens.ts": "./src/tokens.ts",
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.resolved.json",
+    "./color": {
+      "types": "./src/color.d.ts",
+      "import": "./src/color.js"
+    },
+    "./theme": {
+      "types": "./src/theme.d.ts",
+      "import": "./src/theme.js"
+    },
+    "./taper": {
+      "types": "./src/primitives/taper.d.ts",
+      "import": "./src/primitives/taper.js"
+    },
+    "./envelope": {
+      "types": "./src/primitives/envelope.d.ts",
+      "import": "./src/primitives/envelope.js"
+    },
+    "./page-menu": {
+      "types": "./src/primitives/page-menu.d.ts",
+      "import": "./src/primitives/page-menu.js"
+    },
+    "./nc-ui.css": "./dist/nc-ui.css",
+    "./nc-ui.fallback.css": "./dist/nc-ui.fallback.css",
+    "./inject": "./dist/nc-ui-inject.min.js",
+    "./vite": {
+      "types": "./vite.d.ts",
+      "import": "./vite.js"
+    }
+  },
+  "files": [
+    "dist",
+    "vite.js",
+    "vite.d.ts",
+    "src",
+    "tokens",
+    "scripts/build-tokens.mjs",
+    "scripts/build-dist.mjs",
+    "scripts/lint-ui.mjs",
+    "scripts/guard-app.mjs",
+    "docs",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "NOTICE",
+    "AUTHORS"
+  ],
+  "scripts": {
+    "build": "node scripts/build-tokens.mjs && node scripts/build-dist.mjs",
+    "check": "node scripts/build-tokens.mjs --check && node scripts/build-dist.mjs --check",
+    "sizes": "node scripts/build-dist.mjs --check",
+    "lint": "node scripts/lint-ui.mjs",
+    "test": "npm run check && node scripts/lint-ui.mjs && node --test test/*.test.mjs",
+    "inventory": "node scripts/inventory.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "linkedom": "0.18.14"
+  },
+  "bin": {
+    "nc-ui-guard": "scripts/guard-app.mjs"
+  }
+}

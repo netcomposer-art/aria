@@ -1,0 +1,14 @@
+export type Taper = "linear" | "percent" | "db" | "bipolar" | "time" | "freq" | "q" | "rate" | "log";
+export const TAPER_STEPS: number;
+export const TAPERS: readonly Taper[];
+export const TAPER_POWER: number;
+export function taperCurve(taper: Taper | undefined, min: number, max: number): "linear" | "log" | "power";
+export function isTapered(taper: Taper | undefined, min: number, max: number): boolean;
+export function taperToUnit(taper: Taper | undefined, min: number, max: number, value: number): number;
+export function taperFromUnit(taper: Taper | undefined, min: number, max: number, unit: number): number;
+export function snapToStep(value: number, min: number, max: number, step?: number): number;
+export function taperPosition(taper: Taper | undefined, min: number, max: number, value: number): number;
+export function taperValue(taper: Taper | undefined, min: number, max: number, position: number | string, step?: number): number;
+export function taperKeyPosition(position: number | string, key: string, shift?: boolean): number | null;
+export function taperKeyValue(taper: Taper | undefined, min: number, max: number, value: number, key: string, shift?: boolean, step?: number): number | null;
+export function dialTaper(dial: { key?: string; unit?: string | null; curve?: string; taper?: string; options?: unknown } | null | undefined): Taper;

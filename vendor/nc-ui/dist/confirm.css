@@ -1,0 +1,169 @@
+/* nc-ui confirm (confirm.js links this file once per document; no kit.js needed). One question over a dimmed,
+   inert page. Cancel is an outlined button like .nc-btn; the action fills with danger when it is destructive. The
+   layer fades in with motion-fade and out with motion-fade-out, the box scales in with motion-slide.
+   Semantic tokens only. Every var() carries the token's current value as its fallback, so the dialog looks the same
+   in an app without nc-ui tokens (Bass); test/confirm.test.mjs checks each fallback against dist/tokens.js. */
+.nc-ui-confirm-layer,
+.nc-ui-confirm-layer * {
+  box-sizing: border-box;
+}
+.nc-ui-confirm-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: var(--nc-ui-dialog-pad, 16px);
+  background: var(--nc-ui-dialog-scrim, rgba(36,36,36,0.35));
+  opacity: 0;
+  touch-action: none;
+  transition: opacity var(--nc-ui-motion-fade, .2s) var(--nc-ui-motion-fade-easing, ease);
+}
+/* In the Studio the instrument's frame is as tall as its page: the layer covers the part you can see (the Studio
+   writes it as --nc-host-top / --nc-host-bottom), so the question sits on screen, not mid-page. */
+html[data-nc-hosted] .nc-ui-confirm-layer {
+  top: var(--nc-host-top, 0px);
+  bottom: var(--nc-host-bottom, 0px);
+}
+.nc-ui-confirm-layer[data-state="open"] {
+  opacity: 1;
+}
+.nc-ui-confirm-layer[data-state="closing"] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--nc-ui-motion-fade-out, .25s) var(--nc-ui-motion-fade-out-easing, ease-out);
+}
+.nc-ui-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nc-ui-dialog-gap, 12px);
+  width: min(var(--nc-ui-dialog-width, 320px), 100%);
+  padding: var(--nc-ui-dialog-pad, 16px);
+  border: var(--nc-ui-hairline, 1px) solid var(--nc-ui-divider, #DDDDDD);
+  border-radius: var(--nc-ui-dialog-radius, 2px);
+  background: var(--nc-ui-surface-page, #F5F5F5);
+  color: var(--nc-ui-text, #242424);
+  font-family: var(--nc-ui-font-ui, 'Inter', 'Geist', sans-serif);
+  font-size: var(--nc-ui-body-size, 13px);
+  font-weight: var(--nc-ui-title-weight, 400);
+  line-height: var(--nc-ui-dialog-leading, 1.35);
+  transform: scale(0.96);
+  transition: transform var(--nc-ui-motion-slide, .22s) var(--nc-ui-motion-slide-easing, ease-out);
+}
+.nc-ui-confirm-layer[data-state="open"] .nc-ui-confirm {
+  transform: none;
+}
+.nc-ui-confirm-title {
+  margin: 0;
+  font-size: var(--nc-ui-title-size-slim, 18px);
+  font-weight: var(--nc-ui-title-weight, 400);
+  letter-spacing: var(--nc-ui-title-tracking, -.01em);
+}
+.nc-ui-confirm-body {
+  margin: 0;
+  font-size: var(--nc-ui-body-size, 13px);
+  color: var(--nc-ui-text-sub, #595959);
+}
+.nc-ui-confirm-body[data-tone="danger"] {
+  color: var(--nc-ui-danger, hsl(8 55% 44%));
+}
+/* The optional third action: a quiet text button in the accent, above the two buttons, as tall as they are. */
+button.nc-ui-confirm-extra {
+  align-self: flex-start;
+  min-height: var(--nc-ui-target-min, 44px);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--nc-ui-accent, #003153);
+  font: inherit;
+  font-size: var(--nc-ui-readout-size, 12px);
+  letter-spacing: var(--nc-ui-label-tracking, .14em);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+button.nc-ui-confirm-extra:hover {
+  color: var(--nc-ui-text, #242424);
+}
+button.nc-ui-confirm-extra:focus {
+  outline: var(--nc-ui-focus-width-strong, 2px) solid var(--nc-ui-focus-ring, #003153);
+  outline-offset: var(--nc-ui-focus-width-strong, 2px);
+}
+.nc-ui-confirm-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nc-ui-dialog-button-gap, 8px);
+}
+.nc-ui-confirm-label {
+  font-size: var(--nc-ui-readout-size, 12px);
+  letter-spacing: var(--nc-ui-label-tracking, .14em);
+  text-transform: uppercase;
+  color: var(--nc-ui-text-sub, #595959);
+}
+input.nc-ui-confirm-input {
+  min-width: 0;
+  min-height: var(--nc-ui-target-min, 44px);
+  padding: 0 var(--nc-ui-dialog-button-gap, 8px);
+  border: var(--nc-ui-hairline, 1px) solid var(--nc-ui-divider, #DDDDDD);
+  border-radius: 0;
+  background: var(--nc-ui-surface-raised, #EAEAEA);
+  color: var(--nc-ui-text, #242424);
+  font: inherit;
+}
+input.nc-ui-confirm-input:focus {
+  outline: var(--nc-ui-focus-width-strong, 2px) solid var(--nc-ui-focus-ring, #003153);
+  outline-offset: 0;
+}
+button.nc-ui-confirm-btn:disabled {
+  cursor: default;
+  color: var(--nc-ui-text-sub, #595959);
+  border-color: var(--nc-ui-divider, #DDDDDD);
+}
+button.nc-ui-confirm-btn[data-danger="true"]:disabled {
+  background: transparent;
+  color: var(--nc-ui-text-sub, #595959);
+  border-color: var(--nc-ui-divider, #DDDDDD);
+}
+.nc-ui-confirm-actions {
+  display: flex;
+  gap: var(--nc-ui-dialog-button-gap, 8px);
+}
+button.nc-ui-confirm-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: var(--nc-ui-target-min, 44px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: var(--nc-ui-hairline, 1px) solid var(--nc-ui-text, #242424);
+  border-radius: 0;
+  background: transparent;
+  color: var(--nc-ui-text, #242424);
+  font: inherit;
+  font-size: var(--nc-ui-readout-size, 12px);
+  letter-spacing: var(--nc-ui-label-tracking, .14em);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--nc-ui-transition-feedback, .15s);
+}
+button.nc-ui-confirm-btn:hover {
+  background: var(--nc-ui-surface-raised, #EAEAEA);
+}
+button.nc-ui-confirm-btn[data-danger="true"] {
+  border-color: var(--nc-ui-danger, hsl(8 55% 44%));
+  background: var(--nc-ui-danger, hsl(8 55% 44%));
+  color: var(--nc-ui-on-danger, #F5F5F5);
+}
+button.nc-ui-confirm-btn:focus {
+  outline: var(--nc-ui-focus-width-strong, 2px) solid var(--nc-ui-focus-ring, #003153);
+  outline-offset: var(--nc-ui-focus-width-strong, 2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nc-ui-confirm-layer,
+  .nc-ui-confirm-layer[data-state="closing"],
+  .nc-ui-confirm,
+  button.nc-ui-confirm-btn {
+    transition: none;
+    animation: none;
+  }
+}

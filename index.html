@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ARIA Situation</title>
+    <!-- Inside NetComposer Studio: take the Studio's theme (data-nc-theme) before first paint. On its own the page
+         follows the system setting (nc-ui's dark tokens under prefers-color-scheme). -->
+    <script>
+      try {
+        var t = window.frameElement && window.frameElement.ownerDocument.documentElement.getAttribute("data-nc-theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-nc-theme", t);
+      } catch (e) {}
+    </script>
+    <meta name="description" content="ARIA: the NetComposer Studio's Situation module. A live seismometer becomes the Ground wavetable and Energy for the Studio's instruments." />
+  </head>
+  <body>
+    <div id="app" class="nc-page"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
+    "types": ["vite/client"],
+    "strict": true,
+    "noImplicitOverride": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": false,
+    "baseUrl": ".",
+    "paths": {
+      "@netcomposer/nc-situation": ["vendor/nc-situation/src/index.ts"],
+      "@netcomposer/nc-ui": ["vendor/nc-ui/src/index.d.ts"],
+      "@netcomposer/nc-ui/*": ["vendor/nc-ui/*"]
+    },
+    "noUncheckedIndexedAccess": false
+  },
+  "include": ["src", "tests", "vite.config.ts"]
+}
