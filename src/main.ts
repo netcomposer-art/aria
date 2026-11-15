@@ -386,7 +386,13 @@ if (PHONE_LAYOUT) seedHidden(["station", "signals"], HIDDEN_KEY);
 const stationMod = kitModule(
   "station",
   "Station",
-  () => `${status.station?.sta ?? stationName()} · ${status.state}`,
+  // Its one-line summary when folded (phones): short enough never to be cut ("ANMO · live", "offline", "recorded").
+  () =>
+    status.state === "live"
+      ? `${status.station?.sta ?? stationName()} · live`
+      : status.recorded
+        ? "recorded"
+        : status.state,
 );
 const signalsMod = kitModule("signals", "Signals", () =>
   energy === null ? "Energy —" : `Energy ${energy.toFixed(2)}`,
