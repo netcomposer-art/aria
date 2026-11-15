@@ -1,6 +1,6 @@
 {
   "name": "@netcomposer/nc-situation",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "NetComposer's Situation contract: versioned messages for ARIA's signals (Energy, the Ground wavetable) to the Studio's instruments, plus the pure maths that make them. Pure TypeScript, no DOM or Web Audio.",
   "license": "MIT",
   "author": {

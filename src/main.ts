@@ -12,18 +12,24 @@ import {
   tableMessage,
 } from "@netcomposer/nc-situation";
 import {
+  type Control,
   HELP_ATTR,
+  HIDDEN_STORAGE_KEY,
   createSlider,
   defineModule,
   installHelpTips,
   pageMenu,
   placeModules,
+  seedHidden,
 } from "@netcomposer/nc-ui";
+import { type Attrs, h } from "./dom";
 import { helpFor } from "./help";
+import { createPhone } from "./phone";
 import { parseChannel } from "./seedlink";
 import {
   type AriaState,
   DEFAULTS,
+  type PhoneSettings,
   SMOOTHING_MAX,
   SMOOTHING_MIN,
   presetFile,
@@ -84,17 +90,6 @@ const RECORDING_URL = new URL(`${import.meta.env.BASE_URL}${RECORDING.file}`, lo
 
 // ------------------------------------------------------------------------------------------------- DOM helpers
 
-type Attrs = Record<string, string | undefined>;
-function h<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  attrs: Attrs = {},
-  ...children: (Node | string | null | false)[]
-) {
-  const el = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) if (v !== undefined) el.setAttribute(k, v);
-  for (const c of children) if (c !== null && c !== false) el.append(c);
-  return el;
-}
 const help = (key: string): Attrs => ({ [HELP_ATTR]: helpFor(key) || undefined });
 function button(text: string, attrs: Attrs, onClick: () => void): HTMLButtonElement {
   const b = h("button", { type: "button", ...attrs }, text);
@@ -189,6 +184,7 @@ source?.onDemand(() => {
   toWorker({ type: "speeds", speeds: demandSpeeds() });
   if ((source?.demand().receivers ?? 0) > 0) wake();
   paintTo();
+  phone?.paint();
 });
 function statusMessage(): SituationMessage {
   const st = status.station;
@@ -206,6 +202,7 @@ function statusMessage(): SituationMessage {
     hold: state.hold,
     credit: credit(st?.net ?? "IU"),
     ...(status.recorded ? { recorded: true } : {}),
+    motion: phone.state(),
   };
 }
 
@@ -272,6 +269,7 @@ function apply(next: AriaState, restart: boolean): void {
   toWorker({ type: "hold", on: state.hold });
   if (holdChanged) send(state.hold ? offMessage(source?.id ?? SOURCE_ID, "hold") : statusMessage());
   if (restart) startStation();
+  phone.settingsChanged();
   paint();
 }
 
@@ -340,18 +338,32 @@ const footer = h(
 );
 app.append(header, h("main", { class: "nc-page-body" }, stack), footer);
 
-function kitModule(id: string, title: string, summary: () => string) {
-  const mount = h("div", { class: "aria-body", "data-aria-module": id });
+/**
+ * A kit module whose body is ARIA's own DOM: `mount` after a hidden label, plus kit `extra` controls after it (My
+ * phone's More group), where more mounts can sit after their own labels (`mounts`: label id → element).
+ */
+function kitModule(
+  id: string,
+  title: string,
+  summary: () => string,
+  extra: () => Control[] = () => [],
+  mounts: Record<string, HTMLElement> = {},
+  body?: HTMLElement,
+) {
+  const mount = body ?? h("div", { class: "aria-body", "data-aria-module": id });
+  const all = { [`${id}-mount`]: mount, ...mounts };
   const def = () => ({
     id,
     title,
     summary: summary(),
-    controls: [{ type: "label" as const, id: `${id}-mount`, text: "" }],
+    controls: [{ type: "label" as const, id: `${id}-mount`, text: "" }, ...extra()],
   });
   const handle = defineModule(def(), HIDDEN_KEY);
   const place = () => {
-    const anchor = handle.el.querySelector(`[data-nc-id="${id}-mount"]`);
-    if (anchor && anchor.nextSibling !== mount) anchor.after(mount);
+    for (const [anchorId, el] of Object.entries(all)) {
+      const anchor = handle.el.querySelector(`[data-nc-id="${anchorId}"]`);
+      if (anchor && anchor.nextSibling !== el) anchor.after(el);
+    }
   };
   place();
   return {
@@ -368,7 +380,14 @@ const stationName = () =>
   state.station === "recording"
     ? RECORDING.name
     : (PRESETS.find((p) => p.id === state.station)?.name ?? state.custom.toUpperCase());
-const stationMod = kitModule("station", "Station", () => `${stationName()} · ${status.state}`);
+// On phones My phone comes first and Ground's two cards start folded to one line each (Peter, 2026-11-14).
+const PHONE_LAYOUT = window.matchMedia(PHONE).matches;
+if (PHONE_LAYOUT) seedHidden(["station", "signals"], HIDDEN_KEY);
+const stationMod = kitModule(
+  "station",
+  "Station",
+  () => `${status.station?.sta ?? stationName()} · ${status.state}`,
+);
 const signalsMod = kitModule("signals", "Signals", () =>
   energy === null ? "Energy —" : `Energy ${energy.toFixed(2)}`,
 );
@@ -432,13 +451,12 @@ stationMod.mount.append(
     waveCanvas,
     h(
       "div",
-      { class: "aria-row-between aria-small aria-sub aria-mono" },
+      { class: "aria-row-between aria-small aria-sub aria-mono aria-ends" },
       h("span", {}, "−10 min"),
       h("span", {}, "the line is where ARIA plays · the shaded slice is the table"),
       h("span", {}, "now"),
     ),
   ),
-  h("p", { class: "aria-small aria-sub aria-mono" }, "More sources later."),
 );
 
 // --- Signals
@@ -505,7 +523,79 @@ signalsMod.mount.append(
   ),
 );
 
-placeModules(stack, [stationMod.handle, signalsMod.handle], "adjacent");
+// --- My phone (Peter, 2026-11-14): the phone's motion as Tilt X, Tilt Y, Shake and Heading.
+const phoneSettings = (): PhoneSettings => state.motion;
+const phone = createPhone({
+  win: window,
+  settings: phoneSettings,
+  save: (next) => apply({ ...state, motion: next }, false),
+  send,
+  sourceId: () => source?.id ?? SOURCE_ID,
+  ctxNow,
+  listeners: () => (source ? (source.demand().motionNames ?? []) : null),
+  held: () => state.hold,
+  onState: () => {
+    send(statusMessage());
+    paintPhone();
+  },
+  help,
+  studioUrl: "netcomposer.art/studio",
+});
+const PHONE_SUMMARY: Record<string, string> = {
+  off: "off",
+  blocked: "blocked",
+  live: "live",
+  paused: "paused",
+  none: "no sensor",
+};
+const phoneMod = kitModule(
+  "phone",
+  "My phone",
+  () => PHONE_SUMMARY[phone.state()] ?? "",
+  () => [
+    {
+      type: "group",
+      id: "aria-motion-more",
+      title: "More",
+      summary: moreSummaryText(),
+      controls: [
+        {
+          type: "slider",
+          id: "aria-motion-smooth",
+          label: "Smooth",
+          min: 0,
+          max: 100,
+          step: 1,
+          value: Math.round(state.motion.smooth * 100),
+          valueText: `${Math.round(state.motion.smooth * 100)}%`,
+          onChange: (v) => apply({ ...state, motion: { ...state.motion, smooth: v / 100 } }, false),
+        },
+        { type: "label", id: "phone-more-mount", text: "" },
+      ],
+    },
+    { type: "label", id: "phone-foot-mount", text: "" },
+  ],
+  { "phone-more-mount": phone.more, "phone-foot-mount": phone.foot },
+  phone.body,
+);
+function moreSummaryText(): string {
+  const s = state.motion;
+  return `Smooth ${Math.round(s.smooth * 100)}% · ${s.centredAt ? "centred" : "not centred"} · ${
+    s.invertX && s.invertY
+      ? "invert X and Y"
+      : s.invertX
+        ? "invert X"
+        : s.invertY
+          ? "invert Y"
+          : "invert off"
+  }`;
+}
+phoneMod.handle.el
+  .querySelector('[data-nc-id="aria-motion-smooth"]')
+  ?.setAttribute(HELP_ATTR, helpFor("motion:smooth"));
+
+placeModules(stack, [stationMod.handle, signalsMod.handle, phoneMod.handle], "adjacent");
+if (PHONE_LAYOUT) phoneMod.handle.el.dataset.ncShade = "1";
 
 // ------------------------------------------------------------------------------------------------- paint
 
@@ -559,6 +649,15 @@ function paint(): void {
   smoothing.set(state.smoothing);
   paintStatus();
   paintTo();
+  paintPhone();
+}
+/** My phone's card: its summary, More (only while motion is live or paused), the body. */
+function paintPhone(): void {
+  phoneMod.update();
+  const more = phoneMod.handle.el.querySelector<HTMLElement>('[data-nc-id="aria-motion-more"]');
+  const st = phone.state();
+  if (more) more.hidden = st !== "live" && st !== "paused";
+  phone.paint();
 }
 
 // --- canvases (drawn only while the page shows: a hidden tab's frame has no size, and a hidden document is skipped)
@@ -664,11 +763,14 @@ window.addEventListener("pagehide", () => {
   send(offMessage(source?.id ?? SOURCE_ID, "removed"));
   toWorker({ type: "stop" });
 });
-if (window.matchMedia(PHONE).matches) app.dataset.ariaPhone = "";
+if (PHONE_LAYOUT) app.dataset.ariaPhone = "";
 toWorker({ type: "smoothing", sec: state.smoothing });
 toWorker({ type: "hold", on: state.hold });
 toWorker({ type: "speeds", speeds: demandSpeeds() });
 paint();
+phone.resume();
+/** For tests: My phone's state and values. */
+(window as Window & { __ARIA_MOTION__?: unknown }).__ARIA_MOTION__ = phone.debug;
 if (!host || (source?.demand().receivers ?? 0) > 0) wake();
 else {
   // In the Studio a hidden tab's frame has no size: wake once the page is on screen.

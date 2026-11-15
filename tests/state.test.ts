@@ -25,3 +25,24 @@ test("six presets; every one but ANMO and HRV has a fallback; credits cite the n
   expect(credit("IU")).toContain("EarthScope");
   expect(credit("ZZ")).toContain("fdsn.org/networks/detail/ZZ");
 });
+
+test("My phone: an old save loads with motion off and the defaults; its settings round-trip in a preset", () => {
+  expect(sanitize({ station: "hrv", smoothing: 2 }).motion).toEqual(DEFAULTS.motion);
+  expect(DEFAULTS.motion.on).toBe(false);
+  const s = {
+    ...DEFAULTS,
+    motion: {
+      on: true,
+      smooth: 0.55,
+      centre: { pitch: 48, roll: -3 },
+      centredAt: 1_763_000_000_000,
+      invertX: false,
+      invertY: true,
+    },
+  };
+  expect(readPreset(JSON.parse(JSON.stringify(presetFile(s))))).toEqual(s);
+  expect(sanitize({ motion: { smooth: 9, on: "yes", centredAt: -4 } }).motion).toEqual({
+    ...DEFAULTS.motion,
+    smooth: 1,
+  });
+});

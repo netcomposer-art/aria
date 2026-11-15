@@ -9,11 +9,26 @@ into signals the Studio's instruments answer (nc-situation's contract v1):
   so it loops, sent five times a second. ASTRID plays it as its "Ground" table, live, at its own Speed (Live 1×, 10×,
   100× through the stored 30 minutes), or Freeze.
 - **Energy**: how much the ground moves against that station's own last 30 minutes, 0–1 (its normal reads 0.5).
-  ASTRID offers it as a modulation source ("ARIA Energy").
+  ASTRID offers it as a modulation source ("Ground Energy"; it was "ARIA Energy", and saves keep its id).
 
 It works while the Studio is stopped. Served at https://netcomposer.art/aria/ and loaded by the Studio in a
 same-origin iframe (tab "Situation", spine "ARIA / SITUATION / 01"). Identity colour Magma #FF2A3D, light and dark
 (nc-ui `instrument-aria`; Peter, 2026-11-06).
+
+## My phone
+
+The phone the Studio runs on, as a second source (Peter, 2026-11-14; nc-situation 0.2.0): Tilt X and Tilt Y (−1..1,
+0 at the centre), Heading (0..1, slow) and Shake (0..1, a level that falls away), plus a Shake event per shake.
+ASTRID offers them as modulation sources ("ARIA 1 · My phone"); CALLIOPE's Inputs can use them (Tilt Y → Density,
+Shake → New phrase on the next bar).
+
+- **Allow motion**: on iOS the question must come from a tap in ARIA's own frame (src/sensors.ts asks inside the click).
+  Blocked shows how to allow it again; a computer shows "Open the Studio on your phone".
+- **More**: Smooth (0–100 %), Hold still to centre (two seconds still), Invert Tilt X / Y, Turn motion off. Saved with
+  ARIA's settings, so in Scenes.
+- While motion is live the screen stays on (Screen Wake Lock); it pauses while the page is hidden. Nothing leaves the
+  phone: motion goes only to the Studio's instruments on the same page.
+- On phones My phone comes first and Station and Signals start folded to one line each.
 
 ## The station
 

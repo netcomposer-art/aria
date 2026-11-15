@@ -1,7 +1,7 @@
 /**
  * ARIA's side of the Studio bridge (nc-studio src/bridge.ts is the other side). ARIA makes no sound: it is a source on
  * the Studio's situation bus (nc-situation's contract v1), and the bus tells it what receivers want (Energy; Ground
- * tables at which Speeds). Standalone (no Studio, or one without the bus) it gets null and only shows the ground.
+ * tables at which Speeds; My phone's motion). Standalone (no Studio, or one without the bus) it gets null and only shows the ground.
  */
 import type { SituationMessage, TableSpeed } from "@netcomposer/nc-situation";
 
@@ -13,6 +13,10 @@ export interface SituationDemand {
   receivers: number;
   /** Their names ("Synth 01"), for "to …". */
   names: string[];
+  /** Someone wants My phone's motion (a Studio with the motion bus; absent on older Studios). */
+  motion?: boolean;
+  /** The names of those that want it ("Synth, Generator"), for My phone's "to …". */
+  motionNames?: string[];
 }
 
 /** ARIA's handle on the situation bus (nc-studio SituationSource). */
