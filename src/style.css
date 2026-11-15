@@ -134,3 +134,105 @@
 .aria-foot > span:last-child {
   white-space: nowrap;
 }
+
+/* My phone (Peter, 2026-11-14; the approved mockups). Magma only here, in ARIA: the meters, strip and needle. */
+.aria-mo-val {
+  font-family: var(--nc-ui-font-readout);
+  font-size: var(--nc-ui-readout-size);
+  color: var(--nc-ui-text);
+  white-space: nowrap;
+}
+.aria-mo-sub {
+  margin-inline-start: var(--nc-ui-space-8);
+}
+.aria-meter.aria-mo-meter > i {
+  inset: 0 auto 0 0;
+}
+.aria-mo-meter > b {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--aria-magma);
+  opacity: var(--nc-ui-opacity-30);
+}
+.aria-mo-meter[data-bi]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(var(--nc-ui-space-3) * -1);
+  bottom: calc(var(--nc-ui-space-3) * -1);
+  width: var(--nc-ui-hairline);
+  background: var(--nc-ui-text);
+}
+.aria-mo-strip,
+.aria-mo-tape {
+  display: block;
+  width: 100%;
+  background: var(--nc-ui-page-head-bg);
+}
+.aria-mo-strip {
+  height: var(--nc-ui-space-24);
+}
+.aria-mo-tape {
+  height: var(--nc-ui-space-40);
+}
+.aria-mo-text {
+  margin: 0;
+  font-size: var(--nc-ui-font-size-sm);
+  line-height: var(--nc-ui-leading-body);
+  color: var(--nc-ui-text);
+}
+.aria-mo-steps {
+  margin: 0;
+  padding-inline-start: var(--nc-ui-space-18);
+  display: flex;
+  flex-direction: column;
+  gap: var(--nc-ui-space-6);
+  font-size: var(--nc-ui-font-size-sm);
+  line-height: var(--nc-ui-leading-body);
+}
+.aria-mo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--nc-ui-space-12);
+}
+.aria-mo-names {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--nc-ui-space-6) var(--nc-ui-space-16);
+}
+.aria-mo-names > span {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--nc-ui-space-8);
+  font-size: var(--nc-ui-font-size-sm);
+  color: var(--nc-ui-text-sub);
+}
+.aria-mo-btn[data-holding] {
+  border-color: var(--aria-magma);
+}
+.aria-mo-off {
+  align-self: flex-start;
+}
+.aria-motion-head {
+  align-items: center;
+  flex-wrap: wrap;
+}
+/* Caption ends never wrap in a narrow column. */
+.aria-ends > span:first-child,
+.aria-ends > span:last-child {
+  white-space: nowrap;
+}
+.aria-body[hidden],
+.aria-mo-live[hidden],
+.nc-group[hidden],
+.aria-body > p[hidden] {
+  display: none;
+}
+/* Phones: My phone first (Ground's cards follow, folded to one line each). */
+[data-aria-phone] .aria-stack > [data-nc-module="phone"] {
+  order: -1;
+}
+[data-nc-module="phone"] [data-nc-id="aria-motion-more"] {
+  margin-top: var(--nc-ui-space-20);
+}

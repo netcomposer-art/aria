@@ -1,7 +1,8 @@
 /**
- * ARIA's settings: the station, Smoothing and Hold. Saved in this browser (per instance), in the Studio's Scenes (its
+ * ARIA's settings: the station, Smoothing, Hold and My phone's settings (Peter, 2026-11-14). Saved in this browser (per instance), in the Studio's Scenes (its
  * preset) and in a file (Save / Load). Old saves always load: unknown or bad fields fall back to the defaults.
  */
+import { type MotionSettings, sanitizeMotionSettings } from "@netcomposer/nc-situation";
 import { DEFAULT_PRESET, PRESETS } from "./stations";
 
 export const FORMAT = "netcomposer.aria";
@@ -15,6 +16,15 @@ export interface AriaState {
   /** Energy Smoothing, seconds (0.5–30). */
   smoothing: number;
   hold: boolean;
+  /** My phone: Smooth, the centre, Invert X / Y, and whether motion is wanted on (a tap on Allow motion). */
+  motion: PhoneSettings;
+}
+
+export interface PhoneSettings extends MotionSettings {
+  /** The player turned motion on (Allow motion) and not off. On a phone that must ask, a tap still starts it. */
+  on: boolean;
+  /** When the centre was last set (epoch ms), or null: the default centre. */
+  centredAt: number | null;
 }
 
 export const DEFAULTS: AriaState = {
@@ -22,6 +32,7 @@ export const DEFAULTS: AriaState = {
   custom: "IU ANMO 00 BHZ",
   smoothing: 5,
   hold: false,
+  motion: { ...sanitizeMotionSettings(null), on: false, centredAt: null },
 };
 export const SMOOTHING_MIN = 0.5;
 export const SMOOTHING_MAX = 30;
@@ -45,6 +56,7 @@ export function sanitize(raw: unknown): AriaState {
     custom,
     smoothing: Math.min(SMOOTHING_MAX, Math.max(SMOOTHING_MIN, s)),
     hold: r.hold === true,
+    motion: sanitizePhone(r.motion),
   };
 }
 
@@ -59,4 +71,15 @@ export function readPreset(raw: unknown): AriaState | null {
   const f = raw as { format?: unknown; version?: unknown; settings?: unknown };
   if (f.format !== FORMAT || typeof f.version !== "number" || f.version > VERSION) return null;
   return sanitize(f.settings);
+}
+
+/** My phone's settings, checked (an old save without them gets the defaults: motion off). */
+export function sanitizePhone(raw: unknown): PhoneSettings {
+  const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const at = r.centredAt;
+  return {
+    ...sanitizeMotionSettings(raw),
+    on: r.on === true,
+    centredAt: typeof at === "number" && Number.isFinite(at) && at > 0 ? at : null,
+  };
 }
