@@ -268,7 +268,7 @@
   font-size: var(--nc-ui-font-size-xl);
   font-weight: var(--nc-ui-font-weight-bold);
   letter-spacing: var(--nc-ui-tracking-3);
-  color: var(--nc-ui-accent-tint);
+  color: var(--nc-ui-accent);
 }
 .aria-dot-inline {
   display: inline-block;

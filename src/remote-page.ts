@@ -355,6 +355,8 @@ function pair(next: string): void {
         link?.send({ k: "pong", t0: m.t0, tp: win.performance.now() });
         delayMs = typeof m.d === "number" ? m.d : null;
         jitterMs = typeof m.j === "number" ? m.j : null;
+        // The Studio renames its Scene while paired: the phone follows.
+        if (typeof m.n === "string" && m.n) studio = m.n;
         schedule();
       } else if (m.k === "hi" && typeof m.name === "string") {
         studio = m.name;

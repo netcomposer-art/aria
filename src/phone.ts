@@ -390,7 +390,7 @@ export function createPhone(d: PhoneDeps) {
     d.win.clearInterval(pingTimer);
     pingTimer = d.win.setInterval(() => {
       if (!link || linkState !== "paired") return;
-      link.send({ k: "ping", t0: now(), d: delay.ms, j: delay.jitter });
+      link.send({ k: "ping", t0: now(), d: delay.ms, j: delay.jitter, n: sceneName() });
     }, PING_MS);
     d.win.clearInterval(staleTimer);
     // A phone that stops sending (asleep, out of range) goes to Paused; its meters and delay keep updating.

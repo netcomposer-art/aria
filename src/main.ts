@@ -551,7 +551,8 @@ const phone = createPhone({
     try {
       const input =
         window.parent !== window ? window.parent.document.querySelector("input.scene-name") : null;
-      return input instanceof HTMLInputElement ? input.value : "";
+      // The Studio's element (another window: not an instanceof this frame's HTMLInputElement).
+      return input && "value" in input ? String((input as { value: unknown }).value ?? "") : "";
     } catch {
       return "";
     }
