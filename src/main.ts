@@ -349,6 +349,7 @@ function kitModule(
   extra: () => Control[] = () => [],
   mounts: Record<string, HTMLElement> = {},
   body?: HTMLElement,
+  lead: () => Control[] = () => [],
 ) {
   const mount = body ?? h("div", { class: "aria-body", "data-aria-module": id });
   const all = { [`${id}-mount`]: mount, ...mounts };
@@ -356,7 +357,7 @@ function kitModule(
     id,
     title,
     summary: summary(),
-    controls: [{ type: "label" as const, id: `${id}-mount`, text: "" }, ...extra()],
+    controls: [...lead(), { type: "label" as const, id: `${id}-mount`, text: "" }, ...extra()],
   });
   const handle = defineModule(def(), HIDDEN_KEY);
   const place = () => {
@@ -546,6 +547,15 @@ const phone = createPhone({
   },
   help,
   studioUrl: "netcomposer.art/studio",
+  sceneName: () => {
+    try {
+      const input =
+        window.parent !== window ? window.parent.document.querySelector("input.scene-name") : null;
+      return input instanceof HTMLInputElement ? input.value : "";
+    } catch {
+      return "";
+    }
+  },
 });
 const PHONE_SUMMARY: Record<string, string> = {
   off: "off",
@@ -583,6 +593,23 @@ const phoneMod = kitModule(
   ],
   { "phone-more-mount": phone.more, "phone-foot-mount": phone.foot },
   phone.body,
+  // The phone remote (Peter, 2026-11-17): this device's sensors, or a phone paired with this Studio.
+  () => [
+    {
+      type: "choice" as const,
+      id: "aria-motion-via",
+      label: "Motion from",
+      value: phone.via(),
+      options: [
+        { value: "device", label: "This device" },
+        { value: "remote", label: "A phone with this Studio" },
+      ],
+      onChange: (v: string) => {
+        phone.setVia(v === "remote" ? "remote" : "device");
+        paintPhone();
+      },
+    },
+  ],
 );
 function moreSummaryText(): string {
   const s = state.motion;
@@ -775,6 +802,7 @@ toWorker({ type: "hold", on: state.hold });
 toWorker({ type: "speeds", speeds: demandSpeeds() });
 paint();
 phone.resume();
+phone.start();
 /** For tests: My phone's state and values. */
 (window as Window & { __ARIA_MOTION__?: unknown }).__ARIA_MOTION__ = phone.debug;
 if (!host || (source?.demand().receivers ?? 0) > 0) wake();

@@ -236,3 +236,52 @@
 [data-nc-module="phone"] [data-nc-id="aria-motion-more"] {
   margin-top: var(--nc-ui-space-20);
 }
+/* The phone remote (Peter, 2026-11-17): the pairing QR and code, the paired phone's name and delay. */
+.aria-pair {
+  display: flex;
+  align-items: center;
+  gap: var(--nc-ui-space-18);
+  flex-wrap: wrap;
+}
+.aria-qr {
+  flex: none;
+  width: calc(var(--nc-ui-space-64) * 2.5);
+  aspect-ratio: 1;
+  border: var(--nc-ui-hairline) solid var(--nc-ui-divider);
+}
+.aria-qr > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.aria-pair-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nc-ui-space-6);
+  min-width: 0;
+}
+.aria-pair-text p {
+  margin: 0;
+}
+.aria-code {
+  font-family: var(--nc-ui-font-readout);
+  font-size: var(--nc-ui-font-size-xl);
+  font-weight: var(--nc-ui-font-weight-bold);
+  letter-spacing: var(--nc-ui-tracking-3);
+  color: var(--nc-ui-accent-tint);
+}
+.aria-dot-inline {
+  display: inline-block;
+  width: var(--nc-ui-space-6);
+  height: var(--nc-ui-space-6);
+  margin-inline-end: var(--nc-ui-space-8);
+  border-radius: var(--nc-ui-radius-round);
+  border: var(--nc-ui-hairline) solid var(--nc-ui-text-sub);
+  vertical-align: middle;
+}
+.aria-dot-inline.aria-off {
+  border-style: dashed;
+}
+[data-aria="remote-phone"] {
+  font-weight: var(--nc-ui-font-weight-bold);
+}

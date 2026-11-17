@@ -17,6 +17,13 @@ export default defineConfig({
   },
   build: {
     target: "es2022",
+    // Two pages: ARIA (the Studio's Situation module) and ARIA Remote (the phone page, netcomposer.art/remote/).
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL("./index.html", import.meta.url)),
+        remote: fileURLToPath(new URL("./remote.html", import.meta.url)),
+      },
+    },
   },
   worker: {
     format: "es",
