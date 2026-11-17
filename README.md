@@ -30,6 +30,23 @@ Shake → New phrase on the next bar).
   phone: motion goes only to the Studio's instruments on the same page.
 - On phones My phone comes first and Station and Signals start folded to one line each.
 
+### A phone with this Studio (the phone remote)
+
+Peter, 2026-11-17: a phone's motion driving the Studio on a computer. My phone's choice at the top: **This device**
+(the sensors above) or **A phone with this Studio**. The second opens a pairing code on the relay (relay/, a Cloudflare
+Worker) and shows it with a QR of `netcomposer.art/remote/#CODE`, drawn here (src/qr.ts, no QR service).
+
+- The phone opens **ARIA Remote** (remote.html, served at /aria/remote.html; the site's /remote/ forwards there with
+  the code), taps Allow motion and sends each sensor reading (about 60 a second) through the relay. ARIA shapes it
+  exactly as its own phone's (Smooth, centre, Invert, Shake), so the instruments need nothing new.
+- **Tap = Shake** on the phone sends a reading with a jolt past the Shake threshold: the Studio hears a shake.
+  **Hold** on the phone freezes what it sends; the phone's screen off or page hidden shows Paused in ARIA.
+- The delay is measured both ways (half the round trip of a ping each second; jitter from each reading's transit)
+  and shown on both screens. A network blip reconnects by itself; a second phone is refused; End on either side ends it.
+- The choice and the code live in the tab only (sessionStorage): a Scene never keeps a pairing.
+- Tests: tests/remote.test.ts (codes, who may join, messages, the delay, the QR); the Studio's tests/remote.e2e.mjs
+  (two browsers through a local relay).
+
 ## The station
 
 Six presets: Albuquerque (IU.ANMO, the default), Harvard (IU.HRV), between Mauna Loa and Mauna Kea (IU.POHA,

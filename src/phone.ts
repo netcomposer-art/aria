@@ -18,6 +18,20 @@ import {
 } from "@netcomposer/nc-situation";
 import { createSwitch } from "@netcomposer/nc-ui";
 import { type Attrs, h } from "./dom";
+import { qrSvg } from "./qr";
+import {
+  Delay,
+  type Link,
+  type LinkState,
+  connect,
+  delayText,
+  formatCode,
+  pairLink,
+  randomCode,
+  relayUrl,
+  tabToken,
+  unpackReading,
+} from "./remote-link";
 import {
   type Listening,
   type Support,
@@ -47,7 +61,19 @@ export interface PhoneDeps {
   help(key: string): Attrs;
   /** The URL players open on their phone. */
   studioUrl: string;
+  /** The Studio's Scene name, shown on a paired phone ("" standalone). */
+  sceneName?(): string;
 }
+
+/** Where motion comes from: this device's sensors, or a phone paired with this Studio (the phone remote). */
+export type Via = "device" | "remote";
+/** Kept for the tab only (sessionStorage): a Scene never stores a pairing. */
+const VIA_KEY = "aria-motion-via";
+const CODE_KEY = "aria-remote-code";
+/** No reading from a paired phone for this long (ms): Paused. */
+const REMOTE_STALE_MS = 2000;
+/** The Studio pings the phone this often (ms) to measure the delay. */
+const PING_MS = 1000;
 
 /** Shakes shown on the strip (seconds). */
 const STRIP_SEC = 10;
@@ -110,9 +136,37 @@ export function createPhone(d: PhoneDeps) {
   let centreNote = "";
   let noDataTimer = 0;
 
+  // --- the phone remote (Peter, 2026-11-17): a phone paired with this Studio through the relay
+  const store = (() => {
+    try {
+      return d.win.sessionStorage;
+    } catch {
+      return null;
+    }
+  })();
+  let via: Via = store?.getItem(VIA_KEY) === "remote" ? "remote" : "device";
+  let link: Link | null = null;
+  let linkState: LinkState | "idle" = "idle";
+  let linkText = "";
+  let code: string | null = null;
+  let phoneName = "";
+  let phoneVisible = true;
+  let phoneHeld = false;
+  let lastRemoteAt = 0;
+  let remoteTimes: number[] = [];
+  const delay = new Delay();
+  let pingTimer = 0;
+  let staleTimer = 0;
+  const now = () => d.win.performance.now();
+  const remoteFresh = () => lastRemoteAt > 0 && now() - lastRemoteAt < REMOTE_STALE_MS;
+
   // ------------------------------------------------------------------------------------------- state
 
   function state(): MotionState {
+    if (via === "remote") {
+      if (!link || linkState !== "paired" || !lastRemoteAt) return "off";
+      return phoneVisible && !phoneHeld && remoteFresh() ? "live" : "paused";
+    }
     if (noSensor) return "none";
     if (blocked) return "blocked";
     if (!listening) return paused && d.settings().on ? "paused" : "off";
@@ -121,7 +175,7 @@ export function createPhone(d: PhoneDeps) {
   let lastState = state();
   function changed(): void {
     const s = state();
-    lock.set(s === "live");
+    lock.set(via === "device" && s === "live");
     if (s !== lastState) {
       lastState = s;
       d.onState();
@@ -211,6 +265,7 @@ export function createPhone(d: PhoneDeps) {
   }
   /** A Scene or saved settings with motion on: start without a tap where the browser allows it. */
   function resume(): void {
+    if (via === "remote") return;
     if (!d.settings().on || listening || noSensor || paused || asking) return;
     if (support === "open") {
       startListening();
@@ -227,9 +282,170 @@ export function createPhone(d: PhoneDeps) {
   }
   function settingsChanged(): void {
     shaper.set(d.settings());
+    if (via === "remote") {
+      paint();
+      return;
+    }
     if (!d.settings().on && listening) turnOff();
     else if (d.settings().on && !listening) resume();
     paint();
+  }
+
+  // ------------------------------------------------------------------------------------------- the phone remote
+
+  function sceneName(): string {
+    const n = d.sceneName?.().trim();
+    return n || "NetComposer Studio";
+  }
+
+  /** Readings from the paired phone go down exactly the local path (onReading): same shaping, Shake, Hold, centre. */
+  function onRemote(m: Record<string, unknown>): void {
+    if (m.k === "m") {
+      const r = unpackReading(m);
+      if (!r) return;
+      const t = now();
+      delay.reading(r.t * 1000, t);
+      remoteTimes.push(t);
+      while (remoteTimes.length && remoteTimes[0]! < t - 1000) remoteTimes.shift();
+      const wasFresh = remoteFresh() && lastRemoteAt > 0;
+      lastRemoteAt = t;
+      if (phoneHeld || !phoneVisible) return;
+      onReading(r);
+      if (!wasFresh) changed();
+    } else if (m.k === "pong") {
+      if (typeof m.t0 === "number" && typeof m.tp === "number") delay.pong(m.t0, m.tp, now());
+    } else if (m.k === "vis") {
+      const v = m.v === "visible";
+      if (v !== phoneVisible) {
+        phoneVisible = v;
+        // Back on screen: start the shaping afresh (as the local sensors do after the page is hidden).
+        if (v) shaper.reset();
+        changed();
+      }
+    } else if (m.k === "hold") {
+      phoneHeld = m.on === true;
+      changed();
+    } else if (m.k === "hi") {
+      if (typeof m.name === "string") phoneName = m.name;
+      paint();
+    }
+  }
+
+  function newCode(): string {
+    const c = randomCode();
+    try {
+      store?.setItem(CODE_KEY, c);
+    } catch {
+      /* storage blocked */
+    }
+    return c;
+  }
+
+  /** Open the room (a code, the QR) and wait for a phone. */
+  function startRemote(fresh = false): void {
+    stopRemote(false);
+    const kept = store?.getItem(CODE_KEY);
+    code = !fresh && kept && /^[A-Z2-9]{4}$/.test(kept) ? kept : newCode();
+    linkState = "connecting";
+    linkText = "";
+    phoneName = "";
+    phoneVisible = true;
+    phoneHeld = false;
+    lastRemoteAt = 0;
+    remoteTimes = [];
+    delay.reset();
+    shaper.reset();
+    values = shaper.values();
+    const roomCode = code;
+    link = connect({
+      win: d.win,
+      relay: relayUrl(d.win),
+      code: roomCode,
+      role: "studio",
+      token: tabToken(d.win, "aria-remote-token"),
+      name: sceneName,
+      onMessage: onRemote,
+      onState: (st, info) => {
+        if (st === "refused" && info.why === "taken") {
+          // Someone else has this code open: take another.
+          startRemote(true);
+          return;
+        }
+        linkState = st;
+        linkText = info.text ?? "";
+        if (st === "paired") {
+          if (info.peer) phoneName = info.peer;
+        } else {
+          phoneName = st === "waiting" ? "" : phoneName;
+          lastRemoteAt = 0;
+          phoneVisible = true;
+          phoneHeld = false;
+          delay.reset();
+          shaper.reset();
+          values = shaper.values();
+        }
+        changed();
+      },
+    });
+    d.win.clearInterval(pingTimer);
+    pingTimer = d.win.setInterval(() => {
+      if (!link || linkState !== "paired") return;
+      link.send({ k: "ping", t0: now(), d: delay.ms, j: delay.jitter, n: sceneName() });
+    }, PING_MS);
+    d.win.clearInterval(staleTimer);
+    // A phone that stops sending (asleep, out of range) goes to Paused; its meters and delay keep updating.
+    let wasLive = false;
+    staleTimer = d.win.setInterval(() => {
+      const live = state() === "live";
+      if (live !== wasLive) {
+        wasLive = live;
+        changed();
+      } else paint();
+    }, 500);
+    changed();
+  }
+
+  /** Close the room. `end`: tell the phone the pairing is over (End pairing), else just leave (back to This device). */
+  function stopRemote(end: boolean): void {
+    d.win.clearInterval(pingTimer);
+    d.win.clearInterval(staleTimer);
+    if (link) {
+      if (end) link.end();
+      else link.stop();
+    }
+    link = null;
+    linkState = end ? "ended" : "idle";
+    lastRemoteAt = 0;
+    shaper.reset();
+    values = shaper.values();
+  }
+
+  /** This device or A phone with this Studio (the choice at the top of My phone). */
+  function setVia(next: Via): void {
+    if (next === via) return;
+    via = next;
+    try {
+      store?.setItem(VIA_KEY, via);
+    } catch {
+      /* storage blocked */
+    }
+    if (via === "remote") {
+      stopListening();
+      paused = false;
+      startRemote();
+    } else {
+      stopRemote(false);
+      linkState = "idle";
+      shaper.reset();
+      values = shaper.values();
+      resume();
+    }
+    changed();
+  }
+
+  function endPairing(): void {
+    stopRemote(true);
+    changed();
   }
 
   // Pause while the page is hidden (screen locked, another tab or app); back when it shows.
@@ -416,6 +632,7 @@ export function createPhone(d: PhoneDeps) {
     { class: "aria-body", "data-aria": "motion-none" },
     text("Open the Studio on your phone to use its motion."),
     small(`This computer has no motion sensor. On your phone: ${d.studioUrl}`),
+    small("Or pair a phone with this Studio: choose A phone with this Studio above."),
     names("Signals it gives"),
   );
   const pausedNote = small(
@@ -423,13 +640,95 @@ export function createPhone(d: PhoneDeps) {
     "motion-paused",
   );
 
+  // --- the phone remote's views: pairing (QR and code), paired (the meters above, End pairing), ended
+  const qrBox = h("div", { class: "aria-qr", "data-aria": "remote-qr", "aria-hidden": "true" });
+  const codeEl = h("span", { class: "aria-code", "data-aria": "remote-code" }, "");
+  const pairStatus = h("p", {
+    class: "aria-small aria-sub aria-mono",
+    "data-aria": "remote-status",
+  });
+  const pairText = h(
+    "div",
+    { class: "aria-pair-text" },
+    h("p", { class: "aria-mo-text" }, "Scan with your iPhone camera."),
+    h(
+      "p",
+      { class: "aria-small aria-sub aria-mono" },
+      "Or open ",
+      h("b", {}, "netcomposer.art/remote"),
+      " and type",
+    ),
+    codeEl,
+  );
+  const pairEl = h(
+    "div",
+    { class: "aria-body", "data-aria": "remote-pair" },
+    h("div", { class: "aria-pair" }, qrBox, pairText),
+    pairStatus,
+    small(
+      "Only the phone's motion passes through. Nothing is stored. A Scene never keeps a pairing.",
+    ),
+  );
+  const remoteNote = small("", "remote-note");
+  const endBtn = h(
+    "button",
+    {
+      type: "button",
+      class: "nc-btn aria-mo-btn",
+      "data-aria-action": "remote-end",
+      ...d.help("remote:end"),
+    },
+    "End pairing",
+  );
+  endBtn.addEventListener("click", endPairing);
+  const remoteFoot = h("div", { class: "aria-field" }, remoteNote, endBtn);
+  const endedText = small("Pairing ended.", "remote-ended-text");
+  const againBtn = h(
+    "button",
+    { type: "button", class: "nc-btn aria-mo-btn", "data-aria-action": "remote-again" },
+    "Pair a phone again",
+  );
+  againBtn.addEventListener("click", () => {
+    startRemote(true);
+  });
+  const endedEl = h(
+    "div",
+    { class: "aria-body", "data-aria": "remote-ended" },
+    endedText,
+    againBtn,
+  );
+  let qrFor = "";
+  function paintPair(): void {
+    if (!code) return;
+    const link = pairLink(d.win.location.origin, code);
+    if (qrFor !== link) {
+      qrFor = link;
+      qrBox.innerHTML = qrSvg(link);
+      qrBox.dataset.link = link;
+    }
+    codeEl.textContent = formatCode(code);
+    pairStatus.replaceChildren(
+      h("i", { class: `aria-dot-inline${linkState === "offline" ? " aria-off" : ""}` }),
+      linkState === "connecting"
+        ? "Opening a pairing code…"
+        : linkState === "offline"
+          ? "Can't reach the pairing relay. Trying again…"
+          : linkState === "refused"
+            ? linkText || "The relay refused this code."
+            : "Waiting for a phone…",
+    );
+  }
+
   /** The module's main mount. */
   const body = h(
     "div",
     { class: "aria-body", "data-aria-module": "phone" },
     headRow,
+    pairEl,
     live,
     pausedNote,
+    remoteFoot,
+    endedEl,
     allow,
     blockedEl,
     none,
@@ -504,7 +803,16 @@ export function createPhone(d: PhoneDeps) {
         word,
       ),
     ];
-    if (s === "live")
+    if (via === "remote" && linkState === "paired")
+      parts.push(
+        h("b", { "data-aria": "remote-phone" }, phoneName || "Phone"),
+        h(
+          "span",
+          { class: "aria-sub", "data-aria": "remote-delay" },
+          `delay ${delayText(delay.ms, delay.jitter)}`,
+        ),
+      );
+    else if (s === "live")
       parts.push(
         h(
           "span",
@@ -528,13 +836,36 @@ export function createPhone(d: PhoneDeps) {
   function paint(): void {
     const s = state();
     body.dataset.motionState = s;
+    body.dataset.via = via;
+    body.dataset.link = via === "remote" ? linkState : "";
     paintStatus(s);
-    live.hidden = s !== "live" && s !== "paused";
-    pausedNote.hidden = s !== "paused";
-    allow.hidden = s !== "off";
-    blockedEl.hidden = s !== "blocked";
-    none.hidden = s !== "none";
-    foot.hidden = s !== "live" && s !== "paused";
+    const remote = via === "remote";
+    const paired = remote && linkState === "paired";
+    live.hidden = remote ? !paired || !lastRemoteAt : s !== "live" && s !== "paused";
+    pausedNote.hidden = remote || s !== "paused";
+    allow.hidden = remote || s !== "off";
+    blockedEl.hidden = remote || s !== "blocked";
+    none.hidden = remote || s !== "none";
+    foot.hidden = remote || (s !== "live" && s !== "paused");
+    headRow.hidden = remote && !paired;
+    pairEl.hidden = !remote || paired || linkState === "ended" || linkState === "idle";
+    endedEl.hidden = !remote || (linkState !== "ended" && linkState !== "idle");
+    remoteFoot.hidden = !paired;
+    if (remote) {
+      paintPair();
+      endedText.textContent = linkText || "Pairing ended.";
+      remoteNote.textContent = !paired
+        ? ""
+        : !lastRemoteAt
+          ? "Paired. Allow motion on the phone to start."
+          : phoneHeld
+            ? "Held on the phone: motion stays where it is."
+            : !phoneVisible
+              ? "Paused: the phone's screen is off or the Remote page is hidden."
+              : s === "paused"
+                ? "Paused: nothing from the phone for a moment."
+                : `${remoteTimes.length} readings/s from the phone.`;
+    }
     paintValues();
     const st = d.settings();
     invX.sw.set(st.invertX);
@@ -647,6 +978,12 @@ export function createPhone(d: PhoneDeps) {
 
   return {
     state,
+    via: () => via,
+    setVia,
+    /** Back on load with A phone with this Studio chosen in this tab: open the room again. */
+    start(): void {
+      if (via === "remote" && !link) startRemote();
+    },
     body,
     more,
     foot,
@@ -661,6 +998,13 @@ export function createPhone(d: PhoneDeps) {
       shakes: shakes.length,
       listenStart,
       wake: lock.held,
+      via,
+      link: linkState,
+      code,
+      phone: phoneName,
+      delay: delay.ms,
+      jitter: delay.jitter,
+      remoteRate: remoteTimes.length,
     }),
   };
 }

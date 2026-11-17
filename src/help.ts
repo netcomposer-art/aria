@@ -17,6 +17,10 @@ export const HELP: Record<string, string> = {
   // My phone (Peter, 2026-11-14)
   "motion:allow-motion":
     "Your phone asks once. Motion stays on this phone: ARIA turns it into signals for the Studio's instruments.",
+  "motion:via":
+    "This device: the sensors of the device ARIA runs on. A phone with this Studio: pair a phone and its motion comes here.",
+  "remote:end":
+    "End the pairing on both sides. The phone stops sending and the instruments hold their last value.",
   "motion:status":
     "Live: motion is arriving. Paused: the screen locked or the page was hidden. Blocked: the phone said no.",
   "motion:tilt-x":
