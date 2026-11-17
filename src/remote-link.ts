@@ -285,6 +285,14 @@ export function connect(o: LinkOptions) {
     },
     /** Close this side only (the page goes away); the other side hears "gone". */
     stop,
+    /** Drop the socket as a network blip would (tests): it reconnects by itself. */
+    blip(): void {
+      try {
+        ws?.close(3000, "blip");
+      } catch {
+        /* closed */
+      }
+    },
     /** Try now (after a network change). */
     retry(): void {
       if (ws || stopped) return;

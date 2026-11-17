@@ -12,7 +12,14 @@ import {
   randomCode,
 } from "../relay/src/room";
 import { qrSvg } from "../src/qr";
-import { Delay, TAP_JOLT_MS2, delayText, packReading, pairLink, unpackReading } from "../src/remote-link";
+import {
+  Delay,
+  TAP_JOLT_MS2,
+  delayText,
+  packReading,
+  pairLink,
+  unpackReading,
+} from "../src/remote-link";
 
 describe("pairing codes", () => {
   it("reads codes however they are typed, and nothing else", () => {
@@ -50,12 +57,18 @@ describe("who may join a room", () => {
   const phone = { role: "phone" as const, token: "phone-1" };
   it("a Studio opens a free room; a second Studio is refused", () => {
     expect(admit(studio, [])).toEqual({ ok: true, replace: [] });
-    expect(admit({ role: "studio", token: "studio-2" }, [studio])).toEqual({ ok: false, why: "taken" });
+    expect(admit({ role: "studio", token: "studio-2" }, [studio])).toEqual({
+      ok: false,
+      why: "taken",
+    });
   });
   it("a phone needs a Studio, and only one phone at a time", () => {
     expect(admit(phone, [])).toEqual({ ok: false, why: "no-studio" });
     expect(admit(phone, [studio])).toEqual({ ok: true, replace: [] });
-    expect(admit({ role: "phone", token: "phone-2" }, [studio, phone])).toEqual({ ok: false, why: "busy" });
+    expect(admit({ role: "phone", token: "phone-2" }, [studio, phone])).toEqual({
+      ok: false,
+      why: "busy",
+    });
   });
   it("the same tab reconnecting replaces its own stale socket", () => {
     expect(admit(phone, [studio, phone])).toEqual({ ok: true, replace: [1] });
@@ -125,7 +138,9 @@ describe("readings on the wire", () => {
     expect(step.values.shake).toBeGreaterThan(0.7);
   });
   it("the pairing link carries the code in the hash", () => {
-    expect(pairLink("https://netcomposer.art", "K74Q")).toBe("https://netcomposer.art/remote/#K74Q");
+    expect(pairLink("https://netcomposer.art", "K74Q")).toBe(
+      "https://netcomposer.art/remote/#K74Q",
+    );
   });
 });
 

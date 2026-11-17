@@ -443,6 +443,8 @@ win.addEventListener("online", () => link?.retry());
 if (code) pair(code);
 paint();
 
+/** For tests: drop the connection as a network blip would. */
+(win as Window & { __ARIA_REMOTE_BLIP__?: () => void }).__ARIA_REMOTE_BLIP__ = () => link?.blip();
 /** For tests. */
 (win as Window & { __ARIA_REMOTE__?: unknown }).__ARIA_REMOTE__ = () => ({
   code,
