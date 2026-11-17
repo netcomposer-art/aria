@@ -24,8 +24,8 @@ import { type Listening, isIos, listen, motionSupport, requestMotion, wakeLock }
 
 const win = window;
 const app = document.getElementById("app")!;
-/** At most one reading per this long (ms): about 60 a second. */
-const SEND_MS = 1000 / 60;
+/** At most one reading per this long (ms): every reading of a 60 Hz sensor, never more than about 80 a second. */
+const SEND_MS = 12;
 /** Skip readings while the socket is this far behind (bytes): a slow network gets fresh readings, not old ones. */
 const BEHIND_BYTES = 4096;
 
