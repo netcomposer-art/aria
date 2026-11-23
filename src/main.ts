@@ -320,7 +320,7 @@ const header = h(
       " ",
       h("span", { class: "nc-mono" }, NN),
     ),
-    h("p", { class: "nc-page-sub" }, "A NetComposer element."),
+    h("p", { class: "nc-page-sub" }, "A TRIKI instrument."),
   ),
   h("div", { class: "nc-page-actions" }, holdButton, headerMenu.panel, headerMenu.button, fileIn),
 );

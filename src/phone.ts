@@ -295,7 +295,7 @@ export function createPhone(d: PhoneDeps) {
 
   function sceneName(): string {
     const n = d.sceneName?.().trim();
-    return n || "NetComposer Studio";
+    return n || "TRIKI Studio";
   }
 
   /** Readings from the paired phone go down exactly the local path (onReading): same shaping, Shake, Hold, centre. */
