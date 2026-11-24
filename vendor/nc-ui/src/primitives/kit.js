@@ -26,6 +26,14 @@ function landscapeStack(pre) {
   ${st} > .nc-module[data-nc-lead]:not([data-nc-slim]) { grid-column: span 2; grid-row: span 2; }`;
 }
 
+/**
+ * The ▾ of a select, in `color` (a token): one conic wedge from the tip (bottom centre) to the two top corners of a
+ * select-mark square, so it draws as one clean triangle (26.565° = atan(1/2), half the width over the height).
+ */
+function selectMark(color) {
+  return `  background-image: conic-gradient(from -26.565deg at 50% 100%, ${v(color)} 53.13deg, transparent 0);`;
+}
+
 /** Class sheet for the kit. Lengths and colours come from the alias module. */
 export function kitCss() {
   const stack = (n) => `
@@ -571,6 +579,24 @@ ${MODULATED_SELECTOR} { transition: none; }
 }
 .nc-select:hover:not(:disabled) { border-bottom-color: ${v("text-sub")}; }
 .nc-select:focus-visible { outline: none; border-bottom-color: ${v("accent")}; }
+/* The ▾ (Peter, 2026-11-23: "1/8" and "50%" didn't look like dropdowns; LUPA's ▾ for every instrument). A small solid
+   triangle at the select's end, inside its end padding, so the words keep their room: quiet (text-sub), the text
+   colour on hover and focus, the divider grey when the select is off. Drawn as a background (a <select> has no
+   ::after), so it is the same on every platform and font. .nc-dd puts the same ▾ on an app's own select. */
+:is(.nc-select, .nc-dd) {
+${selectMark("text-sub")}
+  background-size: ${v("select-mark")} ${v("select-mark")};
+  background-position: right 0 center;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+}
+.nc-dd { appearance: none; }
+:is(.nc-select, .nc-dd):is(:hover, :focus):not(:disabled) {
+${selectMark("text")}
+}
+:is(.nc-select, .nc-dd):disabled {
+${selectMark("divider")}
+}
 /* Slots on one line, Morph under them as a slider row (label and value, then the slider). */
 .nc-slot-row { flex-direction: column; align-items: stretch; gap: ${v("module-gap")}; }
 .nc-slot-line { display: flex; flex-wrap: nowrap; align-items: center; gap: ${v("slot-gap")}; min-width: 0; }
@@ -902,6 +928,25 @@ ${MODULATED_SELECTOR} { transition: none; }
   outline-offset: ${v("playhead-offset")};
 }
 .nc-step[data-bar="true"] { border-bottom-color: ${v("rhythm.bar-accent")}; }
+/* A step's mark (StepCell.mark, data-nc-mark): a short tag in the lower right corner, e.g. NYX's bar number on a step
+   that plays in one bar only. In the step's own ink: text-sub on an empty step, the accent mark's paper on a filled
+   one (tested on every fill of the velocity ramp); above the accent bar when the step is accented. */
+:is(.nc-step, .nc-pad)[data-nc-mark]::after {
+  content: attr(data-nc-mark);
+  position: absolute;
+  right: ${v("rhythm.step-mark-inset")};
+  bottom: ${v("rhythm.step-mark-inset")};
+  font-family: ${v("font-readout")};
+  font-size: ${v("rhythm.step-mark-size")};
+  font-weight: ${v("control-weight")};
+  line-height: 1;
+  color: ${v("text-sub")};
+  pointer-events: none;
+}
+:is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-mark]::after { color: ${v("rhythm.accent-mark")}; }
+:is(.nc-step, .nc-pad)[aria-pressed="true"][data-accent="true"][data-nc-mark]::after {
+  bottom: calc(${v("rhythm.step-mark-inset")} + ${v("rhythm.accent-mark-size")});
+}
 /* Chance below 100%: a dashed outline at the same width (style only, no opacity, since shade means velocity). The fill
    stops at the padding box, so the dashes are the step's own colour with the row showing between them. */
 .nc-step[data-dim="true"] { border-style: dashed; background-clip: padding-box; }
@@ -1106,6 +1151,9 @@ button.nc-pads-label[aria-pressed="true"] { color: ${v("accent")}; }
   min-width: 0;
 }
 .nc-ui-fx-hd > .nc-ui-fx-name { margin: 0 auto 0 0; }
+/* A filter curve above the row it draws (Peter, 2026-11-07: "In Sampler, the filter slider belongs UNDER the
+   graphic"): its 20 Hz and 20 kHz sit on the canvas's bottom edge, so the next row keeps a gap's distance. */
+.nc-ui-fx > .nc-field:has(> .nc-canvas[data-nc-paint="filter"]) + .nc-field { margin-top: ${v("module-gap")}; }
 /* Fold (onFold): a −/+ after the switch. Folded, the card keeps its header row only; in a console row from 769 px it
    is a narrow column instead (below). It folds and unfolds at once: no motion. */
 .nc-ui-fx-hd > [data-nc-fx-hide] { flex: none; }
@@ -3178,6 +3226,41 @@ ${phoneGroup("")}
 @media (max-width: 1023px) {
 ${phoneGroup("html[data-nc-landscape] ")}
 }
+/* Filled panels (data-nc-fill on <html>, Peter 2026-11-19), an option over any skin: the page is a darker ground,
+   each module a raised card (an inset ring of the ground makes the gutter, so nothing moves), empty steps are soft
+   solid cells instead of outlines, and a host may wash each console strip in its instrument's colour (a custom
+   property it sets on the strip; README, Filled panels). A strip with a shade the player picked keeps that shade. */
+:root[data-nc-fill], :root[data-nc-fill] body { background: ${v("fill-rack")}; }
+:root[data-nc-fill] .nc-module,
+:root[data-nc-fill] .nc-module[data-nc-place][data-nc-shade] {
+  background: ${v("fill-panel")};
+  border-radius: ${v("fill-radius")};
+  box-shadow: inset 0 0 0 ${v("fill-gutter")} ${v("fill-rack")};
+}
+:root[data-nc-fill] .nc-module[data-nc-place="stack"] > .nc-module-hd { border-radius: ${v("fill-radius")} ${v("fill-radius")} 0 0; }
+:root[data-nc-fill] .nc-step:not([aria-pressed="true"]):not([data-out="true"]) {
+  background: ${v("fill-cell")};
+  border-color: ${v("fill-cell")};
+  border-radius: ${v("fill-cell-radius")};
+}
+:root[data-nc-fill] .nc-step[aria-pressed="true"] { border-radius: ${v("fill-cell-radius")}; }
+:root[data-nc-fill] .nc-step[data-bar="true"]:not([aria-pressed="true"]):not([data-out="true"]) { border-bottom-color: ${v("rhythm.bar-accent")}; }
+:root[data-nc-fill] .nc-strip:not([data-nc-master]):not([data-nc-shade]),
+:root[data-nc-fill] .nc-strip:not([data-nc-master]):not([data-nc-shade]):nth-child(even of .nc-strip:not([data-nc-master])) {
+  --nc-strip-ground: color-mix(in srgb, var(--nc-strip-identity, ${v("fill-panel")}) 9%, ${v("fill-panel")});
+  border-radius: ${v("fill-radius")};
+}
+:root[data-nc-fill][data-nc-theme="dark"] .nc-strip:not([data-nc-master]):not([data-nc-shade]),
+:root[data-nc-fill][data-nc-theme="dark"] .nc-strip:not([data-nc-master]):not([data-nc-shade]):nth-child(even of .nc-strip:not([data-nc-master])) {
+  --nc-strip-ground: color-mix(in srgb, var(--nc-strip-identity, ${v("fill-panel")}) 14%, ${v("fill-panel")});
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-nc-fill]:not([data-nc-theme="light"]) .nc-strip:not([data-nc-master]):not([data-nc-shade]),
+  :root[data-nc-fill]:not([data-nc-theme="light"]) .nc-strip:not([data-nc-master]):not([data-nc-shade]):nth-child(even of .nc-strip:not([data-nc-master])) {
+    --nc-strip-ground: color-mix(in srgb, var(--nc-strip-identity, ${v("fill-panel")}) 14%, ${v("fill-panel")});
+  }
+}
+:root[data-nc-fill] .nc-strip + .nc-strip { border-inline-start-color: ${v("fill-panel")}; }
 @media (prefers-reduced-motion: reduce) {
   .nc-btn, .nc-btn:active, .nc-toggle, .nc-seg > button, .nc-sparkle, .nc-sparkle-btn, .nc-sparkle-btn:active,
   .nc-ui-toast, .nc-ui-toast[data-state="closing"], .nc-ui-switch, .nc-select,

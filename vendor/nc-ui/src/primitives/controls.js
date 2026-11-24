@@ -1432,6 +1432,14 @@ function paintVelocity(el, velocity) {
     el.style.setProperty(name, value);
 }
 
+/** A step's mark (StepCell.mark), drawn by the kit's CSS from data-nc-mark: at most two characters. */
+function markStep(el, cell) {
+  const mark = typeof cell?.mark === "string" ? cell.mark.trim().slice(0, 2) : "";
+  if (mark) {
+    if (el.dataset.ncMark !== mark) el.dataset.ncMark = mark;
+  } else if ("ncMark" in el.dataset) delete el.dataset.ncMark;
+}
+
 function patchSteps(node, control) {
   const soloed = control.rows.some((row) => row.solo);
   // Clear's words can change (NYX: Undo until the next edit).
@@ -1488,7 +1496,11 @@ function patchSteps(node, control) {
       else delete pad.dataset.out;
       if (lenMode && step === current.length - 1) pad.dataset.end = "true";
       else delete pad.dataset.end;
-      pad.setAttribute("aria-label", `${current.label} step ${step + 1}`);
+      pad.setAttribute(
+        "aria-label",
+        `${current.label} step ${step + 1}${cell?.markLabel ? `, ${cell.markLabel}` : ""}`,
+      );
+      markStep(pad, cell);
       pad.setAttribute("aria-pressed", cell?.on ? "true" : "false");
       if (cell?.accent) pad.dataset.accent = "true";
       else delete pad.dataset.accent;
@@ -1530,6 +1542,9 @@ function patchSteps(node, control) {
         }
       }
       button.setAttribute("aria-pressed", cell.on ? "true" : "false");
+      const label = `${row.label} step ${step + 1}${cell.markLabel ? `, ${cell.markLabel}` : ""}`;
+      if (button.getAttribute("aria-label") !== label) button.setAttribute("aria-label", label);
+      markStep(button, cell);
       if (cell.accent) button.dataset.accent = "true";
       else delete button.dataset.accent;
       if (cell.dim) button.dataset.dim = "true";

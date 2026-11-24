@@ -21,6 +21,8 @@
   --nc-ui-color-lucy-purple: #9B30FF;
   --nc-ui-color-calliope-pink: #FC409F;
   --nc-ui-color-aria-magma: #FF2A3D;
+  --nc-ui-color-looper-gray: #3F4448;
+  --nc-ui-color-triki-charcoal: #2E2E2E;
   --nc-ui-color-nyx-amber: #BF8001;
   --nc-ui-color-paper-bright: #FCFCFC;
   --nc-ui-color-accent-pad: #1A6193;
@@ -229,6 +231,7 @@
   --nc-ui-surface-page: var(--nc-ui-color-paper);
   --nc-ui-text: var(--nc-ui-color-ink);
   --nc-ui-text-sub: var(--nc-ui-color-sub-0);
+  --nc-ui-brand-ink: var(--nc-ui-color-triki-charcoal);
   --nc-ui-divider: var(--nc-ui-color-div-0);
   --nc-ui-surface-raised: var(--nc-ui-color-surf);
   --nc-ui-accent: var(--nc-ui-color-accent);
@@ -404,6 +407,12 @@
   --nc-ui-move-label-width: var(--nc-ui-space-64);
   --nc-ui-on-danger: var(--nc-ui-color-paper);
   --nc-ui-dialog-scrim: color-mix(in srgb, var(--nc-ui-color-ink) 35%, transparent);
+  --nc-ui-fill-rack: color-mix(in srgb, var(--nc-ui-color-ink) 9%, var(--nc-ui-color-paper));
+  --nc-ui-fill-panel: var(--nc-ui-color-paper-bright);
+  --nc-ui-fill-cell: color-mix(in srgb, var(--nc-ui-color-ink) 11%, var(--nc-ui-color-paper-bright));
+  --nc-ui-fill-radius: 6px;
+  --nc-ui-fill-cell-radius: var(--nc-ui-space-3);
+  --nc-ui-fill-gutter: var(--nc-ui-space-4);
   --nc-ui-dialog-width: 320px;
   --nc-ui-dialog-pad: var(--nc-ui-space-16);
   --nc-ui-dialog-gap: var(--nc-ui-space-12);
@@ -428,6 +437,7 @@
   --nc-ui-tab-pad-y: var(--nc-ui-space-6);
   --nc-ui-tab-mark: var(--nc-ui-border-thick);
   --nc-ui-select-pad-end: var(--nc-ui-space-18);
+  --nc-ui-select-mark: var(--nc-ui-space-5);
   --nc-ui-page-head-layer: 20;
   --nc-ui-page-head-bg: var(--nc-ui-color-paper-bright);
   --nc-ui-instrument-astrid: var(--nc-ui-color-astrid-orange);
@@ -436,6 +446,7 @@
   --nc-ui-instrument-lucy: var(--nc-ui-color-lucy-purple);
   --nc-ui-instrument-nyx: var(--nc-ui-color-nyx-amber);
   --nc-ui-instrument-calliope: var(--nc-ui-color-calliope-pink);
+  --nc-ui-instrument-looper: var(--nc-ui-color-looper-gray);
   --nc-ui-instrument-aria: var(--nc-ui-color-aria-magma);
   --nc-ui-page-title-size: var(--nc-ui-font-size-xl);
   --nc-ui-page-title-tracking: var(--nc-ui-tracking-8);
@@ -494,6 +505,8 @@
   --nc-rhythm-velocity-max: var(--nc-ui-color-accent);
   --nc-rhythm-accent-mark: var(--nc-ui-on-accent);
   --nc-rhythm-accent-mark-size: var(--nc-ui-space-3);
+  --nc-rhythm-step-mark-size: var(--nc-ui-slot-font-size);
+  --nc-rhythm-step-mark-inset: var(--nc-ui-space-2);
   --nc-rhythm-bar-accent: var(--nc-ui-text);
   --nc-rhythm-lane-1: var(--nc-ui-color-ink);
   --nc-rhythm-lane-2: var(--nc-ui-color-accent);
@@ -530,6 +543,8 @@
   --nc-ui-color-olive-green: #9CA536;
   --nc-ui-color-lucy-purple: #B566FF;
   --nc-ui-color-calliope-pink: #FD7CBD;
+  --nc-ui-color-looper-gray: #A9AFB4;
+  --nc-ui-color-triki-charcoal: #BFBEBD;
   --nc-ui-color-nyx-amber: #FEAA02;
   --nc-ui-color-paper-bright: #1A1918;
   --nc-ui-color-accent-pad: #4B91C3;
@@ -601,6 +616,9 @@
   --nc-ui-toast-bg: var(--nc-ui-color-shade-8);
   --nc-ui-toast-text: var(--nc-ui-color-ink);
   --nc-ui-dialog-scrim: color-mix(in srgb, var(--nc-ui-color-black) 55%, transparent);
+  --nc-ui-fill-rack: color-mix(in srgb, var(--nc-ui-color-black) 35%, var(--nc-ui-color-paper));
+  --nc-ui-fill-panel: color-mix(in srgb, var(--nc-ui-color-ink) 7%, var(--nc-ui-color-paper));
+  --nc-ui-fill-cell: color-mix(in srgb, var(--nc-ui-color-ink) 13%, var(--nc-ui-color-paper));
   --nc-synth-key-black: #0F0E0D;
   --nc-synth-key-hint-on-dark: var(--nc-ui-color-ink);
 }
@@ -618,6 +636,8 @@
     --nc-ui-color-olive-green: #9CA536;
     --nc-ui-color-lucy-purple: #B566FF;
     --nc-ui-color-calliope-pink: #FD7CBD;
+    --nc-ui-color-looper-gray: #A9AFB4;
+    --nc-ui-color-triki-charcoal: #BFBEBD;
     --nc-ui-color-nyx-amber: #FEAA02;
     --nc-ui-color-paper-bright: #1A1918;
     --nc-ui-color-accent-pad: #4B91C3;
@@ -689,10 +709,508 @@
     --nc-ui-toast-bg: var(--nc-ui-color-shade-8);
     --nc-ui-toast-text: var(--nc-ui-color-ink);
     --nc-ui-dialog-scrim: color-mix(in srgb, var(--nc-ui-color-black) 55%, transparent);
+    --nc-ui-fill-rack: color-mix(in srgb, var(--nc-ui-color-black) 35%, var(--nc-ui-color-paper));
+    --nc-ui-fill-panel: color-mix(in srgb, var(--nc-ui-color-ink) 7%, var(--nc-ui-color-paper));
+    --nc-ui-fill-cell: color-mix(in srgb, var(--nc-ui-color-ink) 13%, var(--nc-ui-color-paper));
     --nc-synth-key-black: #0F0E0D;
     --nc-synth-key-hint-on-dark: var(--nc-ui-color-ink);
   }
 }
+
+/* Skins (tokens/skins/*.json): data-nc-skin="<id>" on <html>. Each block lists only what the skin changes. */
+/* Graphite: Pure mono: only the instruments carry colour. */
+:root[data-nc-skin="graphite"]:not([data-nc-theme="dark"]) {
+  --nc-ui-color-accent: #2E2E2E;
+  --nc-ui-color-accent-pad: #5C5C5C;
+  --nc-ui-color-accent-velocity-min: #6E6E6E;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-nc-skin="graphite"]:not([data-nc-theme="light"]) {
+    --nc-ui-color-paper: #1D1D1D;
+    --nc-ui-color-ink: #E7E7E7;
+    --nc-ui-color-ivory: #CECECE;
+    --nc-ui-color-surf: #4B4B4B;
+    --nc-ui-color-accent: #D9D9D9;
+    --nc-ui-color-paper-bright: #191919;
+    --nc-ui-color-accent-pad: #8A8A8A;
+    --nc-ui-color-accent-velocity-min: #888888;
+    --nc-ui-color-strip-3: #333333;
+    --nc-ui-color-strip-4: #363636;
+    --nc-ui-color-strip-5: #393939;
+    --nc-ui-color-strip-6: #3C3C3C;
+    --nc-ui-color-strip-7: #3F3F3F;
+    --nc-ui-color-strip-8: #424242;
+    --nc-ui-color-shade-1: #262626;
+    --nc-ui-color-shade-2: #2F2F2F;
+    --nc-ui-color-shade-3: #383838;
+    --nc-ui-color-shade-4: #414141;
+    --nc-ui-color-shade-5: #181818;
+    --nc-ui-color-shade-6: #252525;
+    --nc-ui-color-shade-7: #323232;
+    --nc-ui-color-shade-8: #3F3F3F;
+    --nc-ui-color-sub-0: #AEAEAE;
+    --nc-ui-color-sub-1: #AEAEAE;
+    --nc-ui-color-sub-2: #929292;
+    --nc-ui-color-sub-3: #A0A0A0;
+    --nc-ui-color-sub-4: #B0B0B0;
+    --nc-ui-color-div-0: #4E4E4E;
+    --nc-ui-color-div-1: #232323;
+    --nc-ui-color-div-2: #303030;
+    --nc-ui-color-div-3: #3D3D3D;
+    --nc-ui-color-div-4: #4A4A4A;
+    --nc-ui-color-drawer: #212121;
+    --nc-ui-color-mf-1: #202020;
+    --nc-ui-color-mf-2: #232323;
+    --nc-ui-color-mf-3: #262626;
+    --nc-ui-color-mf-4: #2A2A2A;
+    --nc-ui-color-skeleton-hi: #282828;
+    --nc-ui-color-map-off: #6E6E6E;
+  }
+}
+:root[data-nc-skin="graphite"][data-nc-theme="dark"] {
+  --nc-ui-color-paper: #1D1D1D;
+  --nc-ui-color-ink: #E7E7E7;
+  --nc-ui-color-ivory: #CECECE;
+  --nc-ui-color-surf: #4B4B4B;
+  --nc-ui-color-accent: #D9D9D9;
+  --nc-ui-color-paper-bright: #191919;
+  --nc-ui-color-accent-pad: #8A8A8A;
+  --nc-ui-color-accent-velocity-min: #888888;
+  --nc-ui-color-strip-3: #333333;
+  --nc-ui-color-strip-4: #363636;
+  --nc-ui-color-strip-5: #393939;
+  --nc-ui-color-strip-6: #3C3C3C;
+  --nc-ui-color-strip-7: #3F3F3F;
+  --nc-ui-color-strip-8: #424242;
+  --nc-ui-color-shade-1: #262626;
+  --nc-ui-color-shade-2: #2F2F2F;
+  --nc-ui-color-shade-3: #383838;
+  --nc-ui-color-shade-4: #414141;
+  --nc-ui-color-shade-5: #181818;
+  --nc-ui-color-shade-6: #252525;
+  --nc-ui-color-shade-7: #323232;
+  --nc-ui-color-shade-8: #3F3F3F;
+  --nc-ui-color-sub-0: #AEAEAE;
+  --nc-ui-color-sub-1: #AEAEAE;
+  --nc-ui-color-sub-2: #929292;
+  --nc-ui-color-sub-3: #A0A0A0;
+  --nc-ui-color-sub-4: #B0B0B0;
+  --nc-ui-color-div-0: #4E4E4E;
+  --nc-ui-color-div-1: #232323;
+  --nc-ui-color-div-2: #303030;
+  --nc-ui-color-div-3: #3D3D3D;
+  --nc-ui-color-div-4: #4A4A4A;
+  --nc-ui-color-drawer: #212121;
+  --nc-ui-color-mf-1: #202020;
+  --nc-ui-color-mf-2: #232323;
+  --nc-ui-color-mf-3: #262626;
+  --nc-ui-color-mf-4: #2A2A2A;
+  --nc-ui-color-skeleton-hi: #282828;
+  --nc-ui-color-map-off: #6E6E6E;
+}
+
+/* Oxide: Warm stone grey with a tape-oxide brown accent. */
+:root[data-nc-skin="oxide"]:not([data-nc-theme="dark"]) {
+  --nc-ui-color-paper: #F7F5F3;
+  --nc-ui-color-ink: #272320;
+  --nc-ui-color-ivory: #FCFBF9;
+  --nc-ui-color-surf: #ECE9E7;
+  --nc-ui-color-accent: #5E3420;
+  --nc-ui-color-paper-bright: #FDFCFA;
+  --nc-ui-color-accent-pad: #864A2D;
+  --nc-ui-color-accent-velocity-min: #90624D;
+  --nc-ui-color-strip-3: #EBE8E6;
+  --nc-ui-color-strip-4: #E7E3E1;
+  --nc-ui-color-strip-5: #E2DEDC;
+  --nc-ui-color-strip-6: #DDD9D6;
+  --nc-ui-color-strip-7: #D8D4D1;
+  --nc-ui-color-strip-8: #D4CFCC;
+  --nc-ui-color-shade-1: #F5F3F1;
+  --nc-ui-color-shade-2: #F0EEEB;
+  --nc-ui-color-shade-3: #EBE8E6;
+  --nc-ui-color-shade-4: #E7E3E1;
+  --nc-ui-color-shade-5: #FCFAF8;
+  --nc-ui-color-shade-6: #EFECEA;
+  --nc-ui-color-shade-7: #E3DFDD;
+  --nc-ui-color-shade-8: #D6D2CF;
+  --nc-ui-color-sub-0: #5D5854;
+  --nc-ui-color-sub-1: #5B5652;
+  --nc-ui-color-sub-2: #595450;
+  --nc-ui-color-sub-3: #57524E;
+  --nc-ui-color-sub-4: #55504C;
+  --nc-ui-color-div-0: #E0DCDA;
+  --nc-ui-color-div-1: #F4F2F0;
+  --nc-ui-color-div-2: #E8E4E2;
+  --nc-ui-color-div-3: #DBD7D4;
+  --nc-ui-color-div-4: #D0CBC8;
+  --nc-ui-color-drawer: #F3F1EF;
+  --nc-ui-color-mf-1: #F4F2F0;
+  --nc-ui-color-mf-2: #F1EFED;
+  --nc-ui-color-mf-3: #EEEBE9;
+  --nc-ui-color-mf-4: #EAE7E5;
+  --nc-ui-color-skeleton-hi: #F2F0EE;
+  --nc-ui-color-map-off: #A49E9A;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-nc-skin="oxide"]:not([data-nc-theme="light"]) {
+    --nc-ui-color-paper: #211C18;
+    --nc-ui-color-ink: #EAE6E4;
+    --nc-ui-color-ivory: #D3CDC9;
+    --nc-ui-color-surf: #504A45;
+    --nc-ui-color-accent: #C9997A;
+    --nc-ui-color-paper-bright: #1D1815;
+    --nc-ui-color-accent-pad: #B17C5A;
+    --nc-ui-color-accent-velocity-min: #A77F64;
+    --nc-ui-color-strip-3: #38322E;
+    --nc-ui-color-strip-4: #3B3531;
+    --nc-ui-color-strip-5: #3E3834;
+    --nc-ui-color-strip-6: #413B37;
+    --nc-ui-color-strip-7: #443E3A;
+    --nc-ui-color-strip-8: #47413D;
+    --nc-ui-color-shade-1: #2A2521;
+    --nc-ui-color-shade-2: #342E2A;
+    --nc-ui-color-shade-3: #3D3733;
+    --nc-ui-color-shade-4: #46403C;
+    --nc-ui-color-shade-5: #1C1714;
+    --nc-ui-color-shade-6: #292420;
+    --nc-ui-color-shade-7: #37312D;
+    --nc-ui-color-shade-8: #443E3A;
+    --nc-ui-color-sub-0: #B4ADA8;
+    --nc-ui-color-sub-1: #B4ADA8;
+    --nc-ui-color-sub-2: #98918C;
+    --nc-ui-color-sub-3: #A69F9A;
+    --nc-ui-color-sub-4: #B6AFAA;
+    --nc-ui-color-div-0: #534D48;
+    --nc-ui-color-div-1: #27221E;
+    --nc-ui-color-div-2: #352F2B;
+    --nc-ui-color-div-3: #423C38;
+    --nc-ui-color-div-4: #4F4944;
+    --nc-ui-color-drawer: #25201C;
+    --nc-ui-color-mf-1: #241F1B;
+    --nc-ui-color-mf-2: #27221E;
+    --nc-ui-color-mf-3: #2A2521;
+    --nc-ui-color-mf-4: #2F2925;
+    --nc-ui-color-skeleton-hi: #2C2723;
+    --nc-ui-color-map-off: #736D68;
+  }
+}
+:root[data-nc-skin="oxide"][data-nc-theme="dark"] {
+  --nc-ui-color-paper: #211C18;
+  --nc-ui-color-ink: #EAE6E4;
+  --nc-ui-color-ivory: #D3CDC9;
+  --nc-ui-color-surf: #504A45;
+  --nc-ui-color-accent: #C9997A;
+  --nc-ui-color-paper-bright: #1D1815;
+  --nc-ui-color-accent-pad: #B17C5A;
+  --nc-ui-color-accent-velocity-min: #A77F64;
+  --nc-ui-color-strip-3: #38322E;
+  --nc-ui-color-strip-4: #3B3531;
+  --nc-ui-color-strip-5: #3E3834;
+  --nc-ui-color-strip-6: #413B37;
+  --nc-ui-color-strip-7: #443E3A;
+  --nc-ui-color-strip-8: #47413D;
+  --nc-ui-color-shade-1: #2A2521;
+  --nc-ui-color-shade-2: #342E2A;
+  --nc-ui-color-shade-3: #3D3733;
+  --nc-ui-color-shade-4: #46403C;
+  --nc-ui-color-shade-5: #1C1714;
+  --nc-ui-color-shade-6: #292420;
+  --nc-ui-color-shade-7: #37312D;
+  --nc-ui-color-shade-8: #443E3A;
+  --nc-ui-color-sub-0: #B4ADA8;
+  --nc-ui-color-sub-1: #B4ADA8;
+  --nc-ui-color-sub-2: #98918C;
+  --nc-ui-color-sub-3: #A69F9A;
+  --nc-ui-color-sub-4: #B6AFAA;
+  --nc-ui-color-div-0: #534D48;
+  --nc-ui-color-div-1: #27221E;
+  --nc-ui-color-div-2: #352F2B;
+  --nc-ui-color-div-3: #423C38;
+  --nc-ui-color-div-4: #4F4944;
+  --nc-ui-color-drawer: #25201C;
+  --nc-ui-color-mf-1: #241F1B;
+  --nc-ui-color-mf-2: #27221E;
+  --nc-ui-color-mf-3: #2A2521;
+  --nc-ui-color-mf-4: #2F2925;
+  --nc-ui-color-skeleton-hi: #2C2723;
+  --nc-ui-color-map-off: #736D68;
+}
+
+/* Steel: Cool charcoal with a steel-blue accent. */
+:root[data-nc-skin="steel"]:not([data-nc-theme="dark"]) {
+  --nc-ui-color-paper: #F3F5F8;
+  --nc-ui-color-ink: #212529;
+  --nc-ui-color-ivory: #FAFBFD;
+  --nc-ui-color-surf: #E8EAED;
+  --nc-ui-color-accent: #2F5878;
+  --nc-ui-color-paper-bright: #FBFCFE;
+  --nc-ui-color-accent-pad: #24618D;
+  --nc-ui-color-accent-velocity-min: #4A7394;
+  --nc-ui-color-strip-3: #E7E9EC;
+  --nc-ui-color-strip-4: #E1E4E8;
+  --nc-ui-color-strip-5: #DCDFE3;
+  --nc-ui-color-strip-6: #D7DBDE;
+  --nc-ui-color-strip-7: #D2D6DA;
+  --nc-ui-color-strip-8: #CDD1D5;
+  --nc-ui-color-shade-1: #F1F3F6;
+  --nc-ui-color-shade-2: #ECEEF1;
+  --nc-ui-color-shade-3: #E7E9EC;
+  --nc-ui-color-shade-4: #E1E4E8;
+  --nc-ui-color-shade-5: #F9FAFC;
+  --nc-ui-color-shade-6: #EBEDF0;
+  --nc-ui-color-shade-7: #DDE0E4;
+  --nc-ui-color-shade-8: #D0D4D8;
+  --nc-ui-color-sub-0: #555A5F;
+  --nc-ui-color-sub-1: #53585D;
+  --nc-ui-color-sub-2: #51565B;
+  --nc-ui-color-sub-3: #4F5459;
+  --nc-ui-color-sub-4: #4D5257;
+  --nc-ui-color-div-0: #DADEE1;
+  --nc-ui-color-div-1: #F0F2F5;
+  --nc-ui-color-div-2: #E2E5E9;
+  --nc-ui-color-div-3: #D5D9DC;
+  --nc-ui-color-div-4: #C8CDD1;
+  --nc-ui-color-drawer: #EFF1F4;
+  --nc-ui-color-mf-1: #F0F2F5;
+  --nc-ui-color-mf-2: #EDEFF2;
+  --nc-ui-color-mf-3: #EAECEF;
+  --nc-ui-color-mf-4: #E6E8EB;
+  --nc-ui-color-skeleton-hi: #EEF0F3;
+  --nc-ui-color-map-off: #9BA0A5;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-nc-skin="steel"]:not([data-nc-theme="light"]) {
+    --nc-ui-color-paper: #181E24;
+    --nc-ui-color-ink: #E3E8ED;
+    --nc-ui-color-ivory: #C9CFD6;
+    --nc-ui-color-surf: #454C54;
+    --nc-ui-color-accent: #8FB4D6;
+    --nc-ui-color-paper-bright: #141A20;
+    --nc-ui-color-accent-pad: #658EB3;
+    --nc-ui-color-accent-velocity-min: #6D8CA9;
+    --nc-ui-color-strip-3: #2D343B;
+    --nc-ui-color-strip-4: #30373E;
+    --nc-ui-color-strip-5: #333A41;
+    --nc-ui-color-strip-6: #363D45;
+    --nc-ui-color-strip-7: #394048;
+    --nc-ui-color-strip-8: #3C434B;
+    --nc-ui-color-shade-1: #20272E;
+    --nc-ui-color-shade-2: #293037;
+    --nc-ui-color-shade-3: #323940;
+    --nc-ui-color-shade-4: #3B424A;
+    --nc-ui-color-shade-5: #13191F;
+    --nc-ui-color-shade-6: #1F262D;
+    --nc-ui-color-shade-7: #2C333A;
+    --nc-ui-color-shade-8: #394048;
+    --nc-ui-color-sub-0: #A7AFB8;
+    --nc-ui-color-sub-1: #A7AFB8;
+    --nc-ui-color-sub-2: #8B939C;
+    --nc-ui-color-sub-3: #99A1AA;
+    --nc-ui-color-sub-4: #A9B1BA;
+    --nc-ui-color-div-0: #484F57;
+    --nc-ui-color-div-1: #1E242B;
+    --nc-ui-color-div-2: #2A3138;
+    --nc-ui-color-div-3: #373E46;
+    --nc-ui-color-div-4: #444B53;
+    --nc-ui-color-drawer: #1C2229;
+    --nc-ui-color-mf-1: #1B2128;
+    --nc-ui-color-mf-2: #1E242B;
+    --nc-ui-color-mf-3: #20272E;
+    --nc-ui-color-mf-4: #242B32;
+    --nc-ui-color-skeleton-hi: #222930;
+    --nc-ui-color-map-off: #686F78;
+  }
+}
+:root[data-nc-skin="steel"][data-nc-theme="dark"] {
+  --nc-ui-color-paper: #181E24;
+  --nc-ui-color-ink: #E3E8ED;
+  --nc-ui-color-ivory: #C9CFD6;
+  --nc-ui-color-surf: #454C54;
+  --nc-ui-color-accent: #8FB4D6;
+  --nc-ui-color-paper-bright: #141A20;
+  --nc-ui-color-accent-pad: #658EB3;
+  --nc-ui-color-accent-velocity-min: #6D8CA9;
+  --nc-ui-color-strip-3: #2D343B;
+  --nc-ui-color-strip-4: #30373E;
+  --nc-ui-color-strip-5: #333A41;
+  --nc-ui-color-strip-6: #363D45;
+  --nc-ui-color-strip-7: #394048;
+  --nc-ui-color-strip-8: #3C434B;
+  --nc-ui-color-shade-1: #20272E;
+  --nc-ui-color-shade-2: #293037;
+  --nc-ui-color-shade-3: #323940;
+  --nc-ui-color-shade-4: #3B424A;
+  --nc-ui-color-shade-5: #13191F;
+  --nc-ui-color-shade-6: #1F262D;
+  --nc-ui-color-shade-7: #2C333A;
+  --nc-ui-color-shade-8: #394048;
+  --nc-ui-color-sub-0: #A7AFB8;
+  --nc-ui-color-sub-1: #A7AFB8;
+  --nc-ui-color-sub-2: #8B939C;
+  --nc-ui-color-sub-3: #99A1AA;
+  --nc-ui-color-sub-4: #A9B1BA;
+  --nc-ui-color-div-0: #484F57;
+  --nc-ui-color-div-1: #1E242B;
+  --nc-ui-color-div-2: #2A3138;
+  --nc-ui-color-div-3: #373E46;
+  --nc-ui-color-div-4: #444B53;
+  --nc-ui-color-drawer: #1C2229;
+  --nc-ui-color-mf-1: #1B2128;
+  --nc-ui-color-mf-2: #1E242B;
+  --nc-ui-color-mf-3: #20272E;
+  --nc-ui-color-mf-4: #242B32;
+  --nc-ui-color-skeleton-hi: #222930;
+  --nc-ui-color-map-off: #686F78;
+}
+
+/* Verdigris: Cool blue-grey like weathered copper, with a deep teal accent. */
+:root[data-nc-skin="verdigris"]:not([data-nc-theme="dark"]) {
+  --nc-ui-color-paper: #F2F6F7;
+  --nc-ui-color-ink: #1E2627;
+  --nc-ui-color-ivory: #F9FBFC;
+  --nc-ui-color-surf: #E6EBEC;
+  --nc-ui-color-accent: #0C4C56;
+  --nc-ui-color-paper-bright: #FAFCFD;
+  --nc-ui-color-accent-pad: #006877;
+  --nc-ui-color-accent-velocity-min: #407883;
+  --nc-ui-color-strip-3: #E5EAEB;
+  --nc-ui-color-strip-4: #DFE5E6;
+  --nc-ui-color-strip-5: #DAE1E2;
+  --nc-ui-color-strip-6: #D5DCDD;
+  --nc-ui-color-strip-7: #CFD7D8;
+  --nc-ui-color-strip-8: #CAD2D3;
+  --nc-ui-color-shade-1: #F0F4F5;
+  --nc-ui-color-shade-2: #EAEFF0;
+  --nc-ui-color-shade-3: #E5EAEB;
+  --nc-ui-color-shade-4: #DFE5E6;
+  --nc-ui-color-shade-5: #F9FAFB;
+  --nc-ui-color-shade-6: #E9EEEF;
+  --nc-ui-color-shade-7: #DBE1E3;
+  --nc-ui-color-shade-8: #CDD5D6;
+  --nc-ui-color-sub-0: #525B5D;
+  --nc-ui-color-sub-1: #50595B;
+  --nc-ui-color-sub-2: #4E5759;
+  --nc-ui-color-sub-3: #4C5557;
+  --nc-ui-color-sub-4: #4A5355;
+  --nc-ui-color-div-0: #D8DFE0;
+  --nc-ui-color-div-1: #EFF3F4;
+  --nc-ui-color-div-2: #E1E6E7;
+  --nc-ui-color-div-3: #D3DADB;
+  --nc-ui-color-div-4: #C6CECF;
+  --nc-ui-color-drawer: #EEF2F3;
+  --nc-ui-color-mf-1: #EFF3F4;
+  --nc-ui-color-mf-2: #EBF0F1;
+  --nc-ui-color-mf-3: #E8EDEE;
+  --nc-ui-color-mf-4: #E4E9EA;
+  --nc-ui-color-skeleton-hi: #ECF1F2;
+  --nc-ui-color-map-off: #97A1A3;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-nc-skin="verdigris"]:not([data-nc-theme="light"]) {
+    --nc-ui-color-paper: #161F21;
+    --nc-ui-color-ink: #E2E9EA;
+    --nc-ui-color-ivory: #C7D0D2;
+    --nc-ui-color-surf: #434E4F;
+    --nc-ui-color-accent: #60B0BE;
+    --nc-ui-color-paper-bright: #121B1D;
+    --nc-ui-color-accent-pad: #3799A9;
+    --nc-ui-color-accent-velocity-min: #5095A1;
+    --nc-ui-color-strip-3: #2B3537;
+    --nc-ui-color-strip-4: #2E383A;
+    --nc-ui-color-strip-5: #313B3D;
+    --nc-ui-color-strip-6: #343E40;
+    --nc-ui-color-strip-7: #374143;
+    --nc-ui-color-strip-8: #3A4446;
+    --nc-ui-color-shade-1: #1E282A;
+    --nc-ui-color-shade-2: #273133;
+    --nc-ui-color-shade-3: #303A3C;
+    --nc-ui-color-shade-4: #394345;
+    --nc-ui-color-shade-5: #111A1B;
+    --nc-ui-color-shade-6: #1E2729;
+    --nc-ui-color-shade-7: #2A3436;
+    --nc-ui-color-shade-8: #374143;
+    --nc-ui-color-sub-0: #A5B1B3;
+    --nc-ui-color-sub-1: #A5B1B3;
+    --nc-ui-color-sub-2: #899597;
+    --nc-ui-color-sub-3: #97A3A5;
+    --nc-ui-color-sub-4: #A7B3B5;
+    --nc-ui-color-div-0: #465153;
+    --nc-ui-color-div-1: #1C2527;
+    --nc-ui-color-div-2: #283234;
+    --nc-ui-color-div-3: #353F41;
+    --nc-ui-color-div-4: #424D4E;
+    --nc-ui-color-drawer: #1A2325;
+    --nc-ui-color-mf-1: #192224;
+    --nc-ui-color-mf-2: #1C2527;
+    --nc-ui-color-mf-3: #1E282A;
+    --nc-ui-color-mf-4: #222C2E;
+    --nc-ui-color-skeleton-hi: #202A2C;
+    --nc-ui-color-map-off: #657173;
+  }
+}
+:root[data-nc-skin="verdigris"][data-nc-theme="dark"] {
+  --nc-ui-color-paper: #161F21;
+  --nc-ui-color-ink: #E2E9EA;
+  --nc-ui-color-ivory: #C7D0D2;
+  --nc-ui-color-surf: #434E4F;
+  --nc-ui-color-accent: #60B0BE;
+  --nc-ui-color-paper-bright: #121B1D;
+  --nc-ui-color-accent-pad: #3799A9;
+  --nc-ui-color-accent-velocity-min: #5095A1;
+  --nc-ui-color-strip-3: #2B3537;
+  --nc-ui-color-strip-4: #2E383A;
+  --nc-ui-color-strip-5: #313B3D;
+  --nc-ui-color-strip-6: #343E40;
+  --nc-ui-color-strip-7: #374143;
+  --nc-ui-color-strip-8: #3A4446;
+  --nc-ui-color-shade-1: #1E282A;
+  --nc-ui-color-shade-2: #273133;
+  --nc-ui-color-shade-3: #303A3C;
+  --nc-ui-color-shade-4: #394345;
+  --nc-ui-color-shade-5: #111A1B;
+  --nc-ui-color-shade-6: #1E2729;
+  --nc-ui-color-shade-7: #2A3436;
+  --nc-ui-color-shade-8: #374143;
+  --nc-ui-color-sub-0: #A5B1B3;
+  --nc-ui-color-sub-1: #A5B1B3;
+  --nc-ui-color-sub-2: #899597;
+  --nc-ui-color-sub-3: #97A3A5;
+  --nc-ui-color-sub-4: #A7B3B5;
+  --nc-ui-color-div-0: #465153;
+  --nc-ui-color-div-1: #1C2527;
+  --nc-ui-color-div-2: #283234;
+  --nc-ui-color-div-3: #353F41;
+  --nc-ui-color-div-4: #424D4E;
+  --nc-ui-color-drawer: #1A2325;
+  --nc-ui-color-mf-1: #192224;
+  --nc-ui-color-mf-2: #1C2527;
+  --nc-ui-color-mf-3: #1E282A;
+  --nc-ui-color-mf-4: #222C2E;
+  --nc-ui-color-skeleton-hi: #202A2C;
+  --nc-ui-color-map-off: #657173;
+}
+
+/* Skins: the step and pad velocity fills on each skin's ramp (re-mapped from the default ramp the kit writes). */
+:where(:root[data-nc-skin="graphite"]:not([data-nc-theme="dark"])) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(-0.00325 + 1.00306 * l) calc(0 + 0 * l) calc(0 + 0 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(-0.00325 + 1.00306 * l) calc(0 + 0 * l) calc(0 + 0 * l)); }
+@media (prefers-color-scheme: dark) {
+  :where(:root[data-nc-skin="graphite"]:not([data-nc-theme="light"])) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(-0.72761 + 2.156 * l) calc(0 + 0 * l) calc(0 + 0 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(-0.72761 + 2.156 * l) calc(0 + 0 * l) calc(0 + 0 * l)); }
+}
+:where(:root[data-nc-skin="graphite"][data-nc-theme="dark"]) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(-0.72761 + 2.156 * l) calc(0 + 0 * l) calc(0 + 0 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(-0.72761 + 2.156 * l) calc(0 + 0 * l) calc(0 + 0 * l)); }
+:where(:root[data-nc-skin="oxide"]:not([data-nc-theme="dark"])) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(0.15939 + 0.70451 * l) calc(0.04802 + -0.0005 * l) calc(0.04913 + -0.00139 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(0.15939 + 0.70451 * l) calc(0.04802 + -0.0005 * l) calc(0.04913 + -0.00139 * l)); }
+@media (prefers-color-scheme: dark) {
+  :where(:root[data-nc-skin="oxide"]:not([data-nc-theme="light"])) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(0.14678 + 0.76695 * l) calc(0.00275 + 0.05272 * l) calc(0.0175 + 0.05457 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(0.14678 + 0.76695 * l) calc(0.00275 + 0.05272 * l) calc(0.0175 + 0.05457 * l)); }
+}
+:where(:root[data-nc-skin="oxide"][data-nc-theme="dark"]) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(0.14678 + 0.76695 * l) calc(0.00275 + 0.05272 * l) calc(0.0175 + 0.05457 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(0.14678 + 0.76695 * l) calc(0.00275 + 0.05272 * l) calc(0.0175 + 0.05457 * l)); }
+:where(:root[data-nc-skin="steel"]:not([data-nc-theme="dark"])) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(0.32456 + 0.39736 * l) calc(-0.03137 + 0.00149 * l) calc(-0.06403 + 0.00325 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(0.32456 + 0.39736 * l) calc(-0.03137 + 0.00149 * l) calc(-0.06403 + 0.00325 * l)); }
+@media (prefers-color-scheme: dark) {
+  :where(:root[data-nc-skin="steel"]:not([data-nc-theme="light"])) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(-0.04085 + 1.06359 * l) calc(-0.0043 + -0.0281 * l) calc(-0.01819 + -0.05347 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(-0.04085 + 1.06359 * l) calc(-0.0043 + -0.0281 * l) calc(-0.01819 + -0.05347 * l)); }
+}
+:where(:root[data-nc-skin="steel"][data-nc-theme="dark"]) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(-0.04085 + 1.06359 * l) calc(-0.0043 + -0.0281 * l) calc(-0.01819 + -0.05347 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(-0.04085 + 1.06359 * l) calc(-0.0043 + -0.0281 * l) calc(-0.01819 + -0.05347 * l)); }
+:where(:root[data-nc-skin="verdigris"]:not([data-nc-theme="dark"])) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(0.18471 + 0.65589 * l) calc(-0.05436 + 0.00412 * l) calc(-0.03119 + -0.00213 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(0.18471 + 0.65589 * l) calc(-0.05436 + 0.00412 * l) calc(-0.03119 + -0.00213 * l)); }
+@media (prefers-color-scheme: dark) {
+  :where(:root[data-nc-skin="verdigris"]:not([data-nc-theme="light"])) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(0.19832 + 0.68601 * l) calc(-0.02139 + -0.06501 * l) calc(-0.01173 + -0.03863 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(0.19832 + 0.68601 * l) calc(-0.02139 + -0.06501 * l) calc(-0.01173 + -0.03863 * l)); }
+}
+:where(:root[data-nc-skin="verdigris"][data-nc-theme="dark"]) :is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-velocity] { background: oklab(from var(--nc-ui-velocity-fill) calc(0.19832 + 0.68601 * l) calc(-0.02139 + -0.06501 * l) calc(-0.01173 + -0.03863 * l)); border-color: oklab(from var(--nc-ui-velocity-fill) calc(0.19832 + 0.68601 * l) calc(-0.02139 + -0.06501 * l) calc(-0.01173 + -0.03863 * l)); }
 
 /* kit: kitCss() */
 *, *::before, *::after { box-sizing: border-box; }
@@ -1257,6 +1775,24 @@ button, input, select { font: inherit; color: inherit; }
 }
 .nc-select:hover:not(:disabled) { border-bottom-color: var(--nc-ui-text-sub); }
 .nc-select:focus-visible { outline: none; border-bottom-color: var(--nc-ui-accent); }
+/* The ▾ (Peter, 2026-11-23: "1/8" and "50%" didn't look like dropdowns; LUPA's ▾ for every instrument). A small solid
+   triangle at the select's end, inside its end padding, so the words keep their room: quiet (text-sub), the text
+   colour on hover and focus, the divider grey when the select is off. Drawn as a background (a <select> has no
+   ::after), so it is the same on every platform and font. .nc-dd puts the same ▾ on an app's own select. */
+:is(.nc-select, .nc-dd) {
+  background-image: conic-gradient(from -26.565deg at 50% 100%, var(--nc-ui-text-sub) 53.13deg, transparent 0);
+  background-size: var(--nc-ui-select-mark) var(--nc-ui-select-mark);
+  background-position: right 0 center;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+}
+.nc-dd { appearance: none; }
+:is(.nc-select, .nc-dd):is(:hover, :focus):not(:disabled) {
+  background-image: conic-gradient(from -26.565deg at 50% 100%, var(--nc-ui-text) 53.13deg, transparent 0);
+}
+:is(.nc-select, .nc-dd):disabled {
+  background-image: conic-gradient(from -26.565deg at 50% 100%, var(--nc-ui-divider) 53.13deg, transparent 0);
+}
 /* Slots on one line, Morph under them as a slider row (label and value, then the slider). */
 .nc-slot-row { flex-direction: column; align-items: stretch; gap: var(--nc-ui-module-gap); }
 .nc-slot-line { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--nc-ui-slot-gap); min-width: 0; }
@@ -1588,6 +2124,25 @@ button, input, select { font: inherit; color: inherit; }
   outline-offset: var(--nc-ui-playhead-offset);
 }
 .nc-step[data-bar="true"] { border-bottom-color: var(--nc-rhythm-bar-accent); }
+/* A step's mark (StepCell.mark, data-nc-mark): a short tag in the lower right corner, e.g. NYX's bar number on a step
+   that plays in one bar only. In the step's own ink: text-sub on an empty step, the accent mark's paper on a filled
+   one (tested on every fill of the velocity ramp); above the accent bar when the step is accented. */
+:is(.nc-step, .nc-pad)[data-nc-mark]::after {
+  content: attr(data-nc-mark);
+  position: absolute;
+  right: var(--nc-rhythm-step-mark-inset);
+  bottom: var(--nc-rhythm-step-mark-inset);
+  font-family: var(--nc-ui-font-readout);
+  font-size: var(--nc-rhythm-step-mark-size);
+  font-weight: var(--nc-ui-control-weight);
+  line-height: 1;
+  color: var(--nc-ui-text-sub);
+  pointer-events: none;
+}
+:is(.nc-step, .nc-pad)[aria-pressed="true"][data-nc-mark]::after { color: var(--nc-rhythm-accent-mark); }
+:is(.nc-step, .nc-pad)[aria-pressed="true"][data-accent="true"][data-nc-mark]::after {
+  bottom: calc(var(--nc-rhythm-step-mark-inset) + var(--nc-rhythm-accent-mark-size));
+}
 /* Chance below 100%: a dashed outline at the same width (style only, no opacity, since shade means velocity). The fill
    stops at the padding box, so the dashes are the step's own colour with the row showing between them. */
 .nc-step[data-dim="true"] { border-style: dashed; background-clip: padding-box; }
@@ -1792,6 +2347,9 @@ button.nc-pads-label[aria-pressed="true"] { color: var(--nc-ui-accent); }
   min-width: 0;
 }
 .nc-ui-fx-hd > .nc-ui-fx-name { margin: 0 auto 0 0; }
+/* A filter curve above the row it draws (Peter, 2026-11-07: "In Sampler, the filter slider belongs UNDER the
+   graphic"): its 20 Hz and 20 kHz sit on the canvas's bottom edge, so the next row keeps a gap's distance. */
+.nc-ui-fx > .nc-field:has(> .nc-canvas[data-nc-paint="filter"]) + .nc-field { margin-top: var(--nc-ui-module-gap); }
 /* Fold (onFold): a −/+ after the switch. Folded, the card keeps its header row only; in a console row from 769 px it
    is a narrow column instead (below). It folds and unfolds at once: no motion. */
 .nc-ui-fx-hd > [data-nc-fx-hide] { flex: none; }
@@ -3894,6 +4452,41 @@ html[data-nc-hosted] .nc-page-body { padding-top: var(--nc-ui-module-gap); }
   html[data-nc-landscape] .nc-group[data-nc-collapse="phone"] > .nc-group-body { display: flex; }
   html[data-nc-landscape] .nc-group[data-nc-collapse="phone"][data-nc-open="false"] > .nc-group-body { display: none; }
 }
+/* Filled panels (data-nc-fill on <html>, Peter 2026-11-19), an option over any skin: the page is a darker ground,
+   each module a raised card (an inset ring of the ground makes the gutter, so nothing moves), empty steps are soft
+   solid cells instead of outlines, and a host may wash each console strip in its instrument's colour (a custom
+   property it sets on the strip; README, Filled panels). A strip with a shade the player picked keeps that shade. */
+:root[data-nc-fill], :root[data-nc-fill] body { background: var(--nc-ui-fill-rack); }
+:root[data-nc-fill] .nc-module,
+:root[data-nc-fill] .nc-module[data-nc-place][data-nc-shade] {
+  background: var(--nc-ui-fill-panel);
+  border-radius: var(--nc-ui-fill-radius);
+  box-shadow: inset 0 0 0 var(--nc-ui-fill-gutter) var(--nc-ui-fill-rack);
+}
+:root[data-nc-fill] .nc-module[data-nc-place="stack"] > .nc-module-hd { border-radius: var(--nc-ui-fill-radius) var(--nc-ui-fill-radius) 0 0; }
+:root[data-nc-fill] .nc-step:not([aria-pressed="true"]):not([data-out="true"]) {
+  background: var(--nc-ui-fill-cell);
+  border-color: var(--nc-ui-fill-cell);
+  border-radius: var(--nc-ui-fill-cell-radius);
+}
+:root[data-nc-fill] .nc-step[aria-pressed="true"] { border-radius: var(--nc-ui-fill-cell-radius); }
+:root[data-nc-fill] .nc-step[data-bar="true"]:not([aria-pressed="true"]):not([data-out="true"]) { border-bottom-color: var(--nc-rhythm-bar-accent); }
+:root[data-nc-fill] .nc-strip:not([data-nc-master]):not([data-nc-shade]),
+:root[data-nc-fill] .nc-strip:not([data-nc-master]):not([data-nc-shade]):nth-child(even of .nc-strip:not([data-nc-master])) {
+  --nc-strip-ground: color-mix(in srgb, var(--nc-strip-identity, var(--nc-ui-fill-panel)) 9%, var(--nc-ui-fill-panel));
+  border-radius: var(--nc-ui-fill-radius);
+}
+:root[data-nc-fill][data-nc-theme="dark"] .nc-strip:not([data-nc-master]):not([data-nc-shade]),
+:root[data-nc-fill][data-nc-theme="dark"] .nc-strip:not([data-nc-master]):not([data-nc-shade]):nth-child(even of .nc-strip:not([data-nc-master])) {
+  --nc-strip-ground: color-mix(in srgb, var(--nc-strip-identity, var(--nc-ui-fill-panel)) 14%, var(--nc-ui-fill-panel));
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-nc-fill]:not([data-nc-theme="light"]) .nc-strip:not([data-nc-master]):not([data-nc-shade]),
+  :root[data-nc-fill]:not([data-nc-theme="light"]) .nc-strip:not([data-nc-master]):not([data-nc-shade]):nth-child(even of .nc-strip:not([data-nc-master])) {
+    --nc-strip-ground: color-mix(in srgb, var(--nc-strip-identity, var(--nc-ui-fill-panel)) 14%, var(--nc-ui-fill-panel));
+  }
+}
+:root[data-nc-fill] .nc-strip + .nc-strip { border-inline-start-color: var(--nc-ui-fill-panel); }
 @media (prefers-reduced-motion: reduce) {
   .nc-btn, .nc-btn:active, .nc-toggle, .nc-seg > button, .nc-sparkle, .nc-sparkle-btn, .nc-sparkle-btn:active,
   .nc-ui-toast, .nc-ui-toast[data-state="closing"], .nc-ui-switch, .nc-select,

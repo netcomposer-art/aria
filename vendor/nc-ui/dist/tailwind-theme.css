@@ -88,6 +88,9 @@
   --color-nc-toast-action: var(--nc-ui-toast-action);
   --color-nc-on-danger: var(--nc-ui-on-danger);
   --color-nc-dialog-scrim: var(--nc-ui-dialog-scrim);
+  --color-nc-fill-rack: var(--nc-ui-fill-rack);
+  --color-nc-fill-panel: var(--nc-ui-fill-panel);
+  --color-nc-fill-cell: var(--nc-ui-fill-cell);
   --spacing-nc-module-pad: var(--nc-ui-module-pad);
   --spacing-nc-module-pad-y-desktop: var(--nc-ui-module-pad-y-desktop);
   --spacing-nc-module-pad-x-desktop: var(--nc-ui-module-pad-x-desktop);
@@ -133,6 +136,7 @@
   --spacing-nc-tab-pad-y: var(--nc-ui-tab-pad-y);
   --spacing-nc-tab-mark: var(--nc-ui-tab-mark);
   --spacing-nc-select-pad-end: var(--nc-ui-select-pad-end);
+  --spacing-nc-select-mark: var(--nc-ui-select-mark);
   --spacing-nc-page-sub-gap: var(--nc-ui-page-sub-gap);
   --spacing-nc-page-action-gap: var(--nc-ui-page-action-gap);
   --spacing-nc-page-pad-x: var(--nc-ui-page-pad-x);
@@ -154,6 +158,9 @@
   --spacing-nc-move-gap: var(--nc-ui-move-gap);
   --spacing-nc-move-row-gap: var(--nc-ui-move-row-gap);
   --spacing-nc-move-label-width: var(--nc-ui-move-label-width);
+  --spacing-nc-fill-radius: var(--nc-ui-fill-radius);
+  --spacing-nc-fill-cell-radius: var(--nc-ui-fill-cell-radius);
+  --spacing-nc-fill-gutter: var(--nc-ui-fill-gutter);
   --spacing-nc-dialog-width: var(--nc-ui-dialog-width);
   --spacing-nc-dialog-pad: var(--nc-ui-dialog-pad);
   --spacing-nc-dialog-gap: var(--nc-ui-dialog-gap);

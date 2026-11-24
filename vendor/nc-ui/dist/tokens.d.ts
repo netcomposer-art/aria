@@ -19,6 +19,8 @@ export declare const base: {
     readonly "lucy-purple": "#9B30FF";
     readonly "calliope-pink": "#FC409F";
     readonly "aria-magma": "#FF2A3D";
+    readonly "looper-gray": "#3F4448";
+    readonly "triki-charcoal": "#2E2E2E";
     readonly "nyx-amber": "#BF8001";
     readonly "paper-bright": "#FCFCFC";
     readonly "accent-pad": "#1A6193";
@@ -242,6 +244,7 @@ export declare const semantic: {
   readonly "surface-page": "#F5F5F5";
   readonly "text": "#242424";
   readonly "text-sub": "#595959";
+  readonly "brand-ink": "#2E2E2E";
   readonly "divider": "#DDDDDD";
   readonly "surface-raised": "#EAEAEA";
   readonly "accent": "#003153";
@@ -417,6 +420,12 @@ export declare const semantic: {
   readonly "move-label-width": "64px";
   readonly "on-danger": "#F5F5F5";
   readonly "dialog-scrim": "rgba(36,36,36,0.35)";
+  readonly "fill-rack": "#E2E2E2";
+  readonly "fill-panel": "#FCFCFC";
+  readonly "fill-cell": "#E4E4E4";
+  readonly "fill-radius": "6px";
+  readonly "fill-cell-radius": "3px";
+  readonly "fill-gutter": "4px";
   readonly "dialog-width": "320px";
   readonly "dialog-pad": "16px";
   readonly "dialog-gap": "12px";
@@ -441,6 +450,7 @@ export declare const semantic: {
   readonly "tab-pad-y": "6px";
   readonly "tab-mark": "2px";
   readonly "select-pad-end": "18px";
+  readonly "select-mark": "5px";
   readonly "page-head-layer": "20";
   readonly "page-head-bg": "#FCFCFC";
   readonly "instrument-astrid": "#EB512E";
@@ -449,6 +459,7 @@ export declare const semantic: {
   readonly "instrument-lucy": "#9B30FF";
   readonly "instrument-nyx": "#BF8001";
   readonly "instrument-calliope": "#FC409F";
+  readonly "instrument-looper": "#3F4448";
   readonly "instrument-aria": "#FF2A3D";
   readonly "page-title-size": "15px";
   readonly "page-title-tracking": ".28em";
@@ -510,6 +521,8 @@ export declare const component: {
     readonly "velocity-max": "#003153";
     readonly "accent-mark": "#F5F5F5";
     readonly "accent-mark-size": "3px";
+    readonly "step-mark-size": "9px";
+    readonly "step-mark-inset": "2px";
     readonly "bar-accent": "#242424";
     readonly "lane-1": "#242424";
     readonly "lane-2": "#003153";
@@ -571,6 +584,8 @@ export declare const componentVars: {
     readonly "velocity-max": "var(--nc-rhythm-velocity-max)";
     readonly "accent-mark": "var(--nc-rhythm-accent-mark)";
     readonly "accent-mark-size": "var(--nc-rhythm-accent-mark-size)";
+    readonly "step-mark-size": "var(--nc-rhythm-step-mark-size)";
+    readonly "step-mark-inset": "var(--nc-rhythm-step-mark-inset)";
     readonly "bar-accent": "var(--nc-rhythm-bar-accent)";
     readonly "lane-1": "var(--nc-rhythm-lane-1)";
     readonly "lane-2": "var(--nc-rhythm-lane-2)";
@@ -632,6 +647,8 @@ export declare const componentRefs: {
     readonly "velocity-max": "color.accent";
     readonly "accent-mark": "semantic.on-accent";
     readonly "accent-mark-size": "space.3";
+    readonly "step-mark-size": "semantic.slot-font-size";
+    readonly "step-mark-inset": "space.2";
     readonly "bar-accent": "semantic.text";
     readonly "lane-1": "color.ink";
     readonly "lane-2": "color.accent";
@@ -677,6 +694,7 @@ export declare const vars: {
   readonly "surface-page": "var(--nc-ui-surface-page)";
   readonly "text": "var(--nc-ui-text)";
   readonly "text-sub": "var(--nc-ui-text-sub)";
+  readonly "brand-ink": "var(--nc-ui-brand-ink)";
   readonly "divider": "var(--nc-ui-divider)";
   readonly "surface-raised": "var(--nc-ui-surface-raised)";
   readonly "accent": "var(--nc-ui-accent)";
@@ -852,6 +870,12 @@ export declare const vars: {
   readonly "move-label-width": "var(--nc-ui-move-label-width)";
   readonly "on-danger": "var(--nc-ui-on-danger)";
   readonly "dialog-scrim": "var(--nc-ui-dialog-scrim)";
+  readonly "fill-rack": "var(--nc-ui-fill-rack)";
+  readonly "fill-panel": "var(--nc-ui-fill-panel)";
+  readonly "fill-cell": "var(--nc-ui-fill-cell)";
+  readonly "fill-radius": "var(--nc-ui-fill-radius)";
+  readonly "fill-cell-radius": "var(--nc-ui-fill-cell-radius)";
+  readonly "fill-gutter": "var(--nc-ui-fill-gutter)";
   readonly "dialog-width": "var(--nc-ui-dialog-width)";
   readonly "dialog-pad": "var(--nc-ui-dialog-pad)";
   readonly "dialog-gap": "var(--nc-ui-dialog-gap)";
@@ -876,6 +900,7 @@ export declare const vars: {
   readonly "tab-pad-y": "var(--nc-ui-tab-pad-y)";
   readonly "tab-mark": "var(--nc-ui-tab-mark)";
   readonly "select-pad-end": "var(--nc-ui-select-pad-end)";
+  readonly "select-mark": "var(--nc-ui-select-mark)";
   readonly "page-head-layer": "var(--nc-ui-page-head-layer)";
   readonly "page-head-bg": "var(--nc-ui-page-head-bg)";
   readonly "instrument-astrid": "var(--nc-ui-instrument-astrid)";
@@ -884,6 +909,7 @@ export declare const vars: {
   readonly "instrument-lucy": "var(--nc-ui-instrument-lucy)";
   readonly "instrument-nyx": "var(--nc-ui-instrument-nyx)";
   readonly "instrument-calliope": "var(--nc-ui-instrument-calliope)";
+  readonly "instrument-looper": "var(--nc-ui-instrument-looper)";
   readonly "instrument-aria": "var(--nc-ui-instrument-aria)";
   readonly "page-title-size": "var(--nc-ui-page-title-size)";
   readonly "page-title-tracking": "var(--nc-ui-page-title-tracking)";
@@ -909,6 +935,7 @@ export declare const refs: {
   readonly "surface-page": "color.paper";
   readonly "text": "color.ink";
   readonly "text-sub": "color.sub-0";
+  readonly "brand-ink": "color.triki-charcoal";
   readonly "divider": "color.div-0";
   readonly "surface-raised": "color.surf";
   readonly "accent": "color.accent";
@@ -1084,6 +1111,12 @@ export declare const refs: {
   readonly "move-label-width": "space.64";
   readonly "on-danger": "color.paper";
   readonly "dialog-scrim": null;
+  readonly "fill-rack": null;
+  readonly "fill-panel": "color.paper-bright";
+  readonly "fill-cell": null;
+  readonly "fill-radius": null;
+  readonly "fill-cell-radius": "space.3";
+  readonly "fill-gutter": "space.4";
   readonly "dialog-width": null;
   readonly "dialog-pad": "space.16";
   readonly "dialog-gap": "space.12";
@@ -1108,6 +1141,7 @@ export declare const refs: {
   readonly "tab-pad-y": "space.6";
   readonly "tab-mark": "border.thick";
   readonly "select-pad-end": "space.18";
+  readonly "select-mark": "space.5";
   readonly "page-head-layer": null;
   readonly "page-head-bg": "color.paper-bright";
   readonly "instrument-astrid": "color.astrid-orange";
@@ -1116,6 +1150,7 @@ export declare const refs: {
   readonly "instrument-lucy": "color.lucy-purple";
   readonly "instrument-nyx": "color.nyx-amber";
   readonly "instrument-calliope": "color.calliope-pink";
+  readonly "instrument-looper": "color.looper-gray";
   readonly "instrument-aria": "color.aria-magma";
   readonly "page-title-size": "font-size.xl";
   readonly "page-title-tracking": "tracking.8";
@@ -1160,6 +1195,8 @@ export declare const themes: {
       readonly "lucy-purple": "#9B30FF";
       readonly "calliope-pink": "#FC409F";
       readonly "aria-magma": "#FF2A3D";
+      readonly "looper-gray": "#3F4448";
+      readonly "triki-charcoal": "#2E2E2E";
       readonly "nyx-amber": "#BF8001";
       readonly "paper-bright": "#FCFCFC";
       readonly "accent-pad": "#1A6193";
@@ -1224,6 +1261,7 @@ export declare const themes: {
       readonly "surface-page": "#F5F5F5";
       readonly "text": "#242424";
       readonly "text-sub": "#595959";
+      readonly "brand-ink": "#2E2E2E";
       readonly "divider": "#DDDDDD";
       readonly "surface-raised": "#EAEAEA";
       readonly "accent": "#003153";
@@ -1399,6 +1437,12 @@ export declare const themes: {
       readonly "move-label-width": "64px";
       readonly "on-danger": "#F5F5F5";
       readonly "dialog-scrim": "rgba(36,36,36,0.35)";
+      readonly "fill-rack": "#E2E2E2";
+      readonly "fill-panel": "#FCFCFC";
+      readonly "fill-cell": "#E4E4E4";
+      readonly "fill-radius": "6px";
+      readonly "fill-cell-radius": "3px";
+      readonly "fill-gutter": "4px";
       readonly "dialog-width": "320px";
       readonly "dialog-pad": "16px";
       readonly "dialog-gap": "12px";
@@ -1423,6 +1467,7 @@ export declare const themes: {
       readonly "tab-pad-y": "6px";
       readonly "tab-mark": "2px";
       readonly "select-pad-end": "18px";
+      readonly "select-mark": "5px";
       readonly "page-head-layer": "20";
       readonly "page-head-bg": "#FCFCFC";
       readonly "instrument-astrid": "#EB512E";
@@ -1431,6 +1476,7 @@ export declare const themes: {
       readonly "instrument-lucy": "#9B30FF";
       readonly "instrument-nyx": "#BF8001";
       readonly "instrument-calliope": "#FC409F";
+      readonly "instrument-looper": "#3F4448";
       readonly "instrument-aria": "#FF2A3D";
       readonly "page-title-size": "15px";
       readonly "page-title-tracking": ".28em";
@@ -1492,6 +1538,8 @@ export declare const themes: {
         readonly "velocity-max": "#003153";
         readonly "accent-mark": "#F5F5F5";
         readonly "accent-mark-size": "3px";
+        readonly "step-mark-size": "9px";
+        readonly "step-mark-inset": "2px";
         readonly "bar-accent": "#242424";
         readonly "lane-1": "#242424";
         readonly "lane-2": "#003153";
@@ -1533,6 +1581,8 @@ export declare const themes: {
       readonly "lucy-purple": "#B566FF";
       readonly "calliope-pink": "#FD7CBD";
       readonly "aria-magma": "#FF2A3D";
+      readonly "looper-gray": "#A9AFB4";
+      readonly "triki-charcoal": "#BFBEBD";
       readonly "nyx-amber": "#FEAA02";
       readonly "paper-bright": "#1A1918";
       readonly "accent-pad": "#4B91C3";
@@ -1597,6 +1647,7 @@ export declare const themes: {
       readonly "surface-page": "#1E1D1C";
       readonly "text": "#E8E7E6";
       readonly "text-sub": "#AFAEAD";
+      readonly "brand-ink": "#BFBEBD";
       readonly "divider": "#4F4E4D";
       readonly "surface-raised": "#4C4B4A";
       readonly "accent": "#77B5E2";
@@ -1772,6 +1823,12 @@ export declare const themes: {
       readonly "move-label-width": "64px";
       readonly "on-danger": "#1E1D1C";
       readonly "dialog-scrim": "rgba(0,0,0,0.55)";
+      readonly "fill-rack": "#141312";
+      readonly "fill-panel": "#2C2B2A";
+      readonly "fill-cell": "#383736";
+      readonly "fill-radius": "6px";
+      readonly "fill-cell-radius": "3px";
+      readonly "fill-gutter": "4px";
       readonly "dialog-width": "320px";
       readonly "dialog-pad": "16px";
       readonly "dialog-gap": "12px";
@@ -1796,6 +1853,7 @@ export declare const themes: {
       readonly "tab-pad-y": "6px";
       readonly "tab-mark": "2px";
       readonly "select-pad-end": "18px";
+      readonly "select-mark": "5px";
       readonly "page-head-layer": "20";
       readonly "page-head-bg": "#1A1918";
       readonly "instrument-astrid": "#EB512E";
@@ -1804,6 +1862,7 @@ export declare const themes: {
       readonly "instrument-lucy": "#B566FF";
       readonly "instrument-nyx": "#FEAA02";
       readonly "instrument-calliope": "#FD7CBD";
+      readonly "instrument-looper": "#A9AFB4";
       readonly "instrument-aria": "#FF2A3D";
       readonly "page-title-size": "15px";
       readonly "page-title-tracking": ".28em";
@@ -1865,6 +1924,8 @@ export declare const themes: {
         readonly "velocity-max": "#77B5E2";
         readonly "accent-mark": "#1E1D1C";
         readonly "accent-mark-size": "3px";
+        readonly "step-mark-size": "9px";
+        readonly "step-mark-inset": "2px";
         readonly "bar-accent": "#E8E7E6";
         readonly "lane-1": "#E8E7E6";
         readonly "lane-2": "#77B5E2";
@@ -1890,6 +1951,90 @@ export declare const themes: {
     };
   };
 };
+export declare const skins: readonly [{
+  readonly "id": "prussian";
+  readonly "name": "Prussian";
+  readonly "about": "True greys and Prussian blue.";
+  readonly "default": true;
+  readonly "swatch": {
+    readonly "light": {
+      readonly "paper": "#F5F5F5";
+      readonly "surf": "#EAEAEA";
+      readonly "accent": "#003153";
+    };
+    readonly "dark": {
+      readonly "paper": "#1E1D1C";
+      readonly "surf": "#4C4B4A";
+      readonly "accent": "#77B5E2";
+    };
+  };
+}, {
+  readonly "id": "graphite";
+  readonly "name": "Graphite";
+  readonly "about": "Pure mono: only the instruments carry colour.";
+  readonly "swatch": {
+    readonly "light": {
+      readonly "paper": "#F5F5F5";
+      readonly "surf": "#EAEAEA";
+      readonly "accent": "#2E2E2E";
+    };
+    readonly "dark": {
+      readonly "paper": "#1D1D1D";
+      readonly "surf": "#4B4B4B";
+      readonly "accent": "#D9D9D9";
+    };
+  };
+}, {
+  readonly "id": "oxide";
+  readonly "name": "Oxide";
+  readonly "about": "Warm stone grey with a tape-oxide brown accent.";
+  readonly "swatch": {
+    readonly "light": {
+      readonly "paper": "#F7F5F3";
+      readonly "surf": "#ECE9E7";
+      readonly "accent": "#5E3420";
+    };
+    readonly "dark": {
+      readonly "paper": "#211C18";
+      readonly "surf": "#504A45";
+      readonly "accent": "#C9997A";
+    };
+  };
+}, {
+  readonly "id": "steel";
+  readonly "name": "Steel";
+  readonly "about": "Cool charcoal with a steel-blue accent.";
+  readonly "swatch": {
+    readonly "light": {
+      readonly "paper": "#F3F5F8";
+      readonly "surf": "#E8EAED";
+      readonly "accent": "#2F5878";
+    };
+    readonly "dark": {
+      readonly "paper": "#181E24";
+      readonly "surf": "#454C54";
+      readonly "accent": "#8FB4D6";
+    };
+  };
+}, {
+  readonly "id": "verdigris";
+  readonly "name": "Verdigris";
+  readonly "about": "Cool blue-grey like weathered copper, with a deep teal accent.";
+  readonly "swatch": {
+    readonly "light": {
+      readonly "paper": "#F2F6F7";
+      readonly "surf": "#E6EBEC";
+      readonly "accent": "#0C4C56";
+    };
+    readonly "dark": {
+      readonly "paper": "#161F21";
+      readonly "surf": "#434E4F";
+      readonly "accent": "#60B0BE";
+    };
+  };
+}];
+export type SkinDiff = { color?: Record<string, string>; semantic?: Record<string, string>; component?: Record<string, Record<string, string>>; runtime?: Record<string, string> };
+export declare const skinThemes: Record<string, { light: SkinDiff; dark: SkinDiff }>;
 export type SemanticToken = keyof typeof semantic;
 export type RuntimeToken = keyof typeof runtime;
 export type BaseGroup = keyof typeof base;
@@ -1898,5 +2043,5 @@ export type ComponentToken<D extends ComponentDomain> = keyof (typeof component)
 export type ThemeName = keyof typeof themes;
 export declare function cssVar(name: SemanticToken | RuntimeToken): string;
 export declare function componentVar<D extends ComponentDomain>(domain: D, name: ComponentToken<D> & string): string;
-declare const _default: { prefix: typeof prefix; base: typeof base; semantic: typeof semantic; component: typeof component; componentVars: typeof componentVars; componentRefs: typeof componentRefs; domains: typeof domains; runtime: typeof runtime; vars: typeof vars; refs: typeof refs; constants: typeof constants; themes: typeof themes; cssVar: typeof cssVar; componentVar: typeof componentVar };
+declare const _default: { prefix: typeof prefix; base: typeof base; semantic: typeof semantic; component: typeof component; componentVars: typeof componentVars; componentRefs: typeof componentRefs; domains: typeof domains; runtime: typeof runtime; vars: typeof vars; refs: typeof refs; constants: typeof constants; themes: typeof themes; skins: typeof skins; skinThemes: typeof skinThemes; cssVar: typeof cssVar; componentVar: typeof componentVar };
 export default _default;

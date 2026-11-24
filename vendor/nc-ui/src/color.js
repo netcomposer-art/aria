@@ -3,6 +3,7 @@
 // ASTRID lib/synth-audio/src/surprise.ts (same maths, same random draws).
 // nc-ui was created by Peter Semmelhack (https://psem.me/). MIT License.
 import { semantic, component, constants, cssVar, themes } from '../dist/tokens.js';
+import { DEFAULT_SKIN, themeTokens } from './theme.js';
 
 /** Label colours: the near-black label ink, or white (tokens label-on-fill-dark / -light). */
 export const INK_DARK = semantic['label-on-fill-dark'];
@@ -118,6 +119,11 @@ export const VELOCITY_RAMP = { min: component.rhythm['velocity-min'], max: compo
 /** The ramp per theme, with the mark colour on it (rhythm.step-cell-ink). Pass VELOCITY_RAMPS[currentTheme()]. */
 export const VELOCITY_RAMPS = Object.fromEntries(Object.entries(themes).map(([name, t]) =>
   [name, { min: t.component.rhythm['velocity-min'], max: t.component.rhythm['velocity-max'], ink: t.component.rhythm['step-cell-ink'] }]));
+/** The ramp in a theme and skin (the default skin is VELOCITY_RAMPS[theme]): velocityRamp(currentTheme(), currentSkin()). */
+export function velocityRamp(theme = 'light', skin) {
+  const r = themeTokens(theme, skin ?? DEFAULT_SKIN).component.rhythm;
+  return { min: r['velocity-min'], max: r['velocity-max'], ink: r['step-cell-ink'] };
+}
 
 /**
  * The fill of an on step (or pad) at `velocity`.
