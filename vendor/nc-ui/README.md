@@ -59,6 +59,48 @@ themeTokens('dark').semantic.accent;     // '#69A7D3'
 
 CSS needs nothing: `var(--nc-ui-*)` already follows. Canvas code that reads colours with `readLive` or `getComputedStyle` only has to repaint on `onThemeChange`; code that reads the static `semantic` object should read `themeTokens(currentTheme())` instead.
 
+## Skins and filled panels
+
+A **skin** is a colour scheme on top of light and dark (Peter, 2026-11-19): Prussian (the default), Graphite, Oxide,
+Steel and Verdigris. A skin changes only the greys' tint and the accent; the instruments' identity colours never
+change. `data-nc-skin="<id>"` on `<html>` picks one (no attribute: the default). **Filled panels** are an option over
+any skin: `data-nc-fill` on `<html>` raises each module as a card on a darker ground, fills empty steps, and washes
+each console strip in the colour the host sets on it (`--nc-strip-identity`, the Studio's instrument colours).
+
+```js
+import { applyLook, currentSkin, fillOn, SKINS, themeTokens, velocityRamp } from '@netcomposer/nc-ui';
+applyLook({ skin: 'oxide', fill: true });  // the Studio stores them as netcomposer.studio.skin.v1 / .fill.v1
+SKINS;                                     // [{ id, name, about, default?, swatch: { light, dark: { paper, surf, accent } } }]
+themeTokens('dark').color.accent;          // in the document's skin
+velocityRamp('light', currentSkin());      // the step-fill ramp in a skin
+```
+
+`followHostTheme()` takes the host's skin and panels too, and `onThemeChange` also fires when the skin changes, so
+canvas code that repaints there follows a skin with no change.
+
+### Add a skin (one file, then build and test)
+
+1. Write `tokens/skins/<id>.json` (the id is lowercase, the file name):
+   ```json
+   {
+     "id": "dusk",
+     "name": "Dusk",
+     "about": "Blue-grey dusk with a deep indigo accent.",
+     "light": { "tint": { "hue": 260, "chroma": 0.012 }, "accent": "#2B3A6B" },
+     "dark":  { "tint": { "hue": 260, "chroma": 0.014 }, "accent": "#9AA8E0" }
+   }
+   ```
+   `tint` is an OKLCH hue (0-360) and a small chroma (0-0.03; 0 is pure grey). `accent` is the colour for on,
+   selected, focus and the step fills, one per theme.
+2. `npm run build`: every grey listed in `tokens.json` `skin.tint` keeps its lightness and takes the tint (so the
+   ladder of module, strip and divider greys keeps its spacing and contrast); the accent's companions keep their own
+   lightness in the new hue. A grey that would read as green loses tint until it does not.
+3. `npm test`: `test/skins.test.mjs` fails if the skin moves an instrument colour, uses green (the accent must stay
+   out of hue 60-180°), or drops below 7:1 for text, 4.5:1 for sub text, the accent on the page, the page colour on
+   the accent, and the step mark on every velocity fill.
+4. Any new accent needs Peter's OK (AGENTS.md). Pickers list `SKINS`, so a new skin shows up with no app change once
+   nc-ui is published at /nc-ui/ and the app re-vendors.
+
 ## Tokens are the source of truth (S2)
 
 **Decision (nc-ui 0.2.0):** `tokens/tokens.json` is the only place a value lives. Tailwind and every other styling layer may **reference** tokens, and nothing else:

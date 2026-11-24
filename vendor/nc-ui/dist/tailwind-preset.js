@@ -90,7 +90,10 @@ const theme = {
     "nc-toast-text": "var(--nc-ui-toast-text)",
     "nc-toast-action": "var(--nc-ui-toast-action)",
     "nc-on-danger": "var(--nc-ui-on-danger)",
-    "nc-dialog-scrim": "var(--nc-ui-dialog-scrim)"
+    "nc-dialog-scrim": "var(--nc-ui-dialog-scrim)",
+    "nc-fill-rack": "var(--nc-ui-fill-rack)",
+    "nc-fill-panel": "var(--nc-ui-fill-panel)",
+    "nc-fill-cell": "var(--nc-ui-fill-cell)"
   },
   "spacing": {
     "nc-module-pad": "var(--nc-ui-module-pad)",
@@ -138,6 +141,7 @@ const theme = {
     "nc-tab-pad-y": "var(--nc-ui-tab-pad-y)",
     "nc-tab-mark": "var(--nc-ui-tab-mark)",
     "nc-select-pad-end": "var(--nc-ui-select-pad-end)",
+    "nc-select-mark": "var(--nc-ui-select-mark)",
     "nc-page-sub-gap": "var(--nc-ui-page-sub-gap)",
     "nc-page-action-gap": "var(--nc-ui-page-action-gap)",
     "nc-page-pad-x": "var(--nc-ui-page-pad-x)",
@@ -159,6 +163,9 @@ const theme = {
     "nc-move-gap": "var(--nc-ui-move-gap)",
     "nc-move-row-gap": "var(--nc-ui-move-row-gap)",
     "nc-move-label-width": "var(--nc-ui-move-label-width)",
+    "nc-fill-radius": "var(--nc-ui-fill-radius)",
+    "nc-fill-cell-radius": "var(--nc-ui-fill-cell-radius)",
+    "nc-fill-gutter": "var(--nc-ui-fill-gutter)",
     "nc-dialog-width": "var(--nc-ui-dialog-width)",
     "nc-dialog-pad": "var(--nc-ui-dialog-pad)",
     "nc-dialog-gap": "var(--nc-ui-dialog-gap)",

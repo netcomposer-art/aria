@@ -21,5 +21,6 @@ export interface VelocityShade { velocity: number; t: number; fill: string; ink:
 export declare const VELOCITY_RANGE: readonly [number, number];
 export declare const VELOCITY_RAMP: VelocityRamp;
 export declare const VELOCITY_RAMPS: Record<"light" | "dark", Required<VelocityRamp>>;
+export declare function velocityRamp(theme?: "light" | "dark", skin?: string): Required<VelocityRamp>;
 export declare function velocityFill(velocity: number, ramp?: VelocityRamp): VelocityShade;
 export declare function velocityFillStyle(velocity: number, ramp?: VelocityRamp): Record<string, string>;

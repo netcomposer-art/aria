@@ -1,5 +1,9 @@
 export declare const HELP_ATTR: "data-nc-help";
 export declare const HELP_DELAY: number;
+export declare const HELP_WARM_DELAY: number;
+export declare const HELP_WARM_MS: number;
+export declare const HELP_SLOP: number;
+export declare const HELP_MOVE_HIDE: number;
 export interface HelpRect { top: number; bottom: number; left: number }
 export declare function placeHelp(
   anchor: HelpRect,

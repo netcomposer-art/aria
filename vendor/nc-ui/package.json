@@ -78,6 +78,7 @@
     "src",
     "tokens",
     "scripts/build-tokens.mjs",
+    "scripts/skins.mjs",
     "scripts/build-dist.mjs",
     "scripts/lint-ui.mjs",
     "scripts/guard-app.mjs",

@@ -69,7 +69,7 @@ export {
   pickToastPlacement,
   toastAnnouncement,
 } from "./primitives/toast.js";
-export { HELP_ATTR, HELP_DELAY, type HelpTips, installHelpTips, placeHelp } from "./primitives/help.js";
+export { HELP_ATTR, HELP_DELAY, HELP_MOVE_HIDE, HELP_SLOP, HELP_WARM_DELAY, HELP_WARM_MS, type HelpTips, installHelpTips, placeHelp } from "./primitives/help.js";
 export { PAGE_MENU_ICON, PAGE_MENU_PHONE, type PageMenu, pageMenu } from "./primitives/page-menu.js";
 /** "(orientation: landscape) and (max-height: 500px) and (max-width: 1023px)": a phone held sideways. A host mirrors it onto a frame's <html> as data-nc-landscape (a frame as tall as its page never reads as landscape). */
 export declare const LANDSCAPE_PHONE: string;
@@ -229,6 +229,13 @@ export interface StepCell {
   accent: boolean;
   dim?: boolean;
   velocity?: number;
+  /**
+   * A short tag (one or two characters) in the step's lower corner, on the grid and the phone pads: NYX marks a step
+   * that plays in one bar only of a longer pattern with that bar's number ("2"). `markLabel` is what a screen reader
+   * says after the step ("bar 2 of 2").
+   */
+  mark?: string;
+  markLabel?: string;
 }
 export interface StepRow {
   id: string;

@@ -8,8 +8,18 @@
 
 /** The attribute that carries a description. */
 export const HELP_ATTR = "data-nc-help";
-/** How long the pointer rests before the description shows (ms). */
-export const HELP_DELAY = 350;
+/**
+ * How long the pointer rests, still, on a marked element before its description shows (ms). Any movement starts the
+ * wait again, so a pointer passing over, or working a control, never brings it up (Peter, 2026-11-12: "only show them
+ * if the user hovers the mouse, in a static position"). Platform tooltips wait about half a second to a second.
+ */
+export const HELP_DELAY = 1000;
+/** Once one has shown, the next shows after this rest (ms), for HELP_WARM_MS after the last one hid: reading along. */
+export const HELP_WARM_DELAY = 300;
+export const HELP_WARM_MS = 1500;
+/** Movement smaller than this (px) still counts as resting; a shown description hides once the pointer moves more. */
+export const HELP_SLOP = 4;
+export const HELP_MOVE_HIDE = 8;
 
 /**
  * Where the bubble goes: above the anchor, left-aligned with it and kept inside the viewport width; below it when
@@ -48,17 +58,39 @@ export function installHelpTips({ document: doc = globalThis.document, delay = H
   let timer;
   let pinned = false;
   let pinTimer;
+  /** Where the pointer rests (the wait's start) or where the description showed. */
+  let at = null;
+  let showing = false;
+  /** Until when the next description shows after HELP_WARM_DELAY. */
+  let warmUntil = 0;
 
-  const hide = () => {
+  const conceal = () => {
     clearTimeout(timer);
-    clearTimeout(pinTimer);
-    current = null;
-    pinned = false;
+    if (showing && !pinned) warmUntil = Date.now() + HELP_WARM_MS;
+    showing = false;
     if (bubble) {
       bubble.hidden = true;
       delete bubble.dataset.pinned;
     }
   };
+  const hide = () => {
+    conceal();
+    clearTimeout(pinTimer);
+    current = null;
+    at = null;
+    pinned = false;
+  };
+  /** Wait for a rest on `el`, from `point`. */
+  const wait = (el, point) => {
+    clearTimeout(timer);
+    at = point;
+    const ms = Date.now() < warmUntil ? Math.min(delay, HELP_WARM_DELAY) : delay;
+    timer = setTimeout(() => {
+      if (current === el && el.isConnected && !pinned && show(el)) showing = true;
+    }, ms);
+  };
+  const pointOf = (e) => ({ x: Number(e.clientX) || 0, y: Number(e.clientY) || 0 });
+  const far = (a, b, px) => !a || Math.hypot(a.x - b.x, a.y - b.y) > px;
   const show = (el, words) => {
     const text = words ?? el.getAttribute(HELP_ATTR);
     if (!text) return false;
@@ -91,17 +123,37 @@ export function installHelpTips({ document: doc = globalThis.document, delay = H
     const el = e.target && e.target.closest ? e.target.closest(`[${HELP_ATTR}]`) : null;
     if (el === current) return;
     hide();
-    if (!el) return;
+    if (!el || e.buttons) return;
     current = el;
-    timer = setTimeout(() => {
-      if (current === el && el.isConnected) show(el);
-    }, delay);
+    wait(el, pointOf(e));
+  };
+  // Resting: the wait starts again on any movement; a shown description goes once the pointer moves on (a drag never
+  // shows one: a held button hides it).
+  const move = (e) => {
+    if (pinned || e.pointerType === "touch" || !current) return;
+    if (e.buttons) {
+      conceal();
+      at = null;
+      return;
+    }
+    const p = pointOf(e);
+    if (showing) {
+      if (far(at, p, HELP_MOVE_HIDE)) {
+        conceal();
+        wait(current, p);
+      }
+    } else if (far(at, p, HELP_SLOP)) wait(current, p);
+  };
+  const out = (e) => {
+    if (!pinned && !e.relatedTarget) hide();
   };
   const key = (e) => {
     if (pinned || e.key === "Escape") hide();
   };
 
   doc.addEventListener("pointerover", over);
+  doc.addEventListener("pointermove", move, { passive: true });
+  doc.addEventListener("pointerout", out);
   doc.addEventListener("pointerdown", hide, true);
   doc.addEventListener("keydown", key);
   win.addEventListener("scroll", hide, true);
@@ -120,6 +172,8 @@ export function installHelpTips({ document: doc = globalThis.document, delay = H
     uninstall() {
       hide();
       doc.removeEventListener("pointerover", over);
+      doc.removeEventListener("pointermove", move);
+      doc.removeEventListener("pointerout", out);
       doc.removeEventListener("pointerdown", hide, true);
       doc.removeEventListener("keydown", key);
       win.removeEventListener("scroll", hide, true);
